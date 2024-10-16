@@ -73,7 +73,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
 }) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Luca', deviceId);
     return null;
   }
 
@@ -90,7 +90,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
     return null;
   }
 
-  debugPrint('Subscribed to audioBytes stream from Friend Device');
+  debugPrint('Subscribed to audioBytes stream from Luca Device');
   var listener = audioDataStreamCharacteristic.lastValueStream.listen((value) {
     if (value.isNotEmpty) onAudioBytesReceived(value);
   });
@@ -109,7 +109,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
 Future<BleAudioCodec> getAudioCodec(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Luca', deviceId);
     return BleAudioCodec.pcm8;
   }
 
@@ -143,14 +143,14 @@ Future<BleAudioCodec> getAudioCodec(String deviceId) async {
       logErrorMessage('Unknown codec id: $codecId', deviceId);
   }
 
-  // debugPrint('Codec is $codec');
+  debugPrint('Codec is $codec');
   return codec;
 }
 
 Future cameraStartPhotoController(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Luca', deviceId);
     return;
   }
 
@@ -169,7 +169,7 @@ Future cameraStartPhotoController(String deviceId) async {
 Future cameraStopPhotoController(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Luca', deviceId);
     return;
   }
 
@@ -187,7 +187,7 @@ Future cameraStopPhotoController(String deviceId) async {
 Future<bool> hasPhotoStreamingCharacteristic(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Luca', deviceId);
     return false;
   }
   var imageCaptureControlCharacteristic = getCharacteristicByUuid(friendService, imageDataStreamCharacteristicUuid);
@@ -200,7 +200,7 @@ Future<StreamSubscription?> getBleImageBytesListener(
 }) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Luca', deviceId);
     return null;
   }
 
@@ -217,7 +217,7 @@ Future<StreamSubscription?> getBleImageBytesListener(
     return null;
   }
 
-  debugPrint('Subscribed to imageBytes stream from Friend Device');
+  debugPrint('Subscribed to imageBytes stream from Luca Device');
   var listener = imageStreamCharacteristic.lastValueStream.listen((value) {
     if (value.isNotEmpty) onImageBytesReceived(value);
   });

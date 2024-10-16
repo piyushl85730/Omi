@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/services/notification_service.dart';
+import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:web_socket_channel/io.dart';

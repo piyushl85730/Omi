@@ -451,17 +451,22 @@ class CapturePageState extends State<CapturePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Stack(
-      children: [
-        ListView(children: [
-          speechProfileWidget(context, setState, restartWebSocket),
-          ...getConnectionStateWidgets(context, _hasTranscripts, widget.device, wsConnectionState, _internetStatus),
-          getTranscriptWidget(memoryCreating, segments, photos, widget.device),
-          ...connectionStatusWidgets(context, segments, wsConnectionState, _internetStatus),
-          const SizedBox(height: 16)
-        ]),
-        getPhoneMicRecordingButton(_recordingToggled, recordingState)
-      ],
+    return Scaffold(
+      body: Stack(
+        children: [
+          ListView(children: [
+            speechProfileWidget(context, setState, restartWebSocket),
+            ...getConnectionStateWidgets(context, _hasTranscripts,
+                widget.device, wsConnectionState, _internetStatus),
+            getTranscriptWidget(
+                memoryCreating, segments, photos, widget.device),
+            ...connectionStatusWidgets(
+                context, segments, wsConnectionState, _internetStatus),
+            const SizedBox(height: 16)
+          ]),
+          getPhoneMicRecordingButton(_recordingToggled, recordingState)
+        ],
+      ),
     );
   }
 

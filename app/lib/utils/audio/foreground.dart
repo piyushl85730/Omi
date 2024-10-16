@@ -11,7 +11,7 @@ void _startForegroundCallback() {
 
 class _ForegroundFirstTaskHandler extends TaskHandler {
   @override
-  void onStart(DateTime timestamp) async {
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     debugPrint("Starting foreground task");
   }
 
@@ -50,7 +50,7 @@ class _ForegroundFirstTaskHandler extends TaskHandler {
   }
 
   @override
-  void onDestroy(DateTime timestamp) async {
+  Future<void> onDestroy(DateTime timestamp) async {
     debugPrint("Destroying foreground task");
     FlutterForegroundTask.stopService();
   }
@@ -85,7 +85,8 @@ class ForegroundUtil {
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'foreground_service',
         channelName: 'Foreground Service Notification',
-        channelDescription: 'Transcription service is running in the background.',
+        channelDescription:
+            'Transcription service is running in the background.',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.HIGH,
         // iconData: const NotificationIconData(
@@ -98,9 +99,9 @@ class ForegroundUtil {
         showNotification: false,
         playSound: false,
       ),
-      foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 30000,
-        isOnceEvent: false,
+      foregroundTaskOptions: ForegroundTaskOptions(
+        eventAction: ForegroundTaskEventAction.repeat(5000),
+        autoRunOnMyPackageReplaced: true,
         autoRunOnBoot: false,
         allowWakeLock: true,
         allowWifiLock: true,
@@ -114,7 +115,7 @@ class ForegroundUtil {
       return FlutterForegroundTask.restartService();
     } else {
       return await FlutterForegroundTask.startService(
-        notificationTitle: 'Your Friend Device is connected.',
+        notificationTitle: 'Your Luca Device is connected.',
         notificationText: 'Transcription service is running in the background.',
         callback: _startForegroundCallback,
       );
