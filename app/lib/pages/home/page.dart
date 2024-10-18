@@ -636,7 +636,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                                     userMemoriesModels:
                                                         userMemoriesModels!,
                                                     pluginsModels:
-                                                        pluginsModels!)
+                                                        pluginsModels ?? [])
                                                 : const Center(
                                                     child:
                                                         CupertinoActivityIndicator())),
@@ -1171,6 +1171,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     WidgetsBinding.instance.removeObserver(this);
     _connectionStateListener?.cancel();
     _bleBatteryLevelListener?.cancel();
+
     /// I comment below code because: When I logout and login again, the app is found issue.
     //connectivityController.isConnected.dispose();
     _controller?.dispose();

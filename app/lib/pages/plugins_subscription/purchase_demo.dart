@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter/services.dart';
@@ -16,7 +16,7 @@ class PurchaseDemo {
     required Function(PurchaseDetails purchaseDetails) onPurchased,
     required Function() onShowPremiumTransfers,
     Function()? onCanceled,
-    Function()? onFailed,
+    Function(String v)? onFailed,
   }) async {
     debugPrint("purchaseDetailsList :- ${purchaseDetailsList.length}");
     for (var purchaseDetails in purchaseDetailsList) {
@@ -35,7 +35,7 @@ class PurchaseDemo {
           purchaseDetails.status == PurchaseStatus.error) {
         //Failed to acknowledge the purchase!
         if (onFailed != null) {
-          onFailed();
+          onFailed("Something went wrong please try again!");
         }
       } else {
         if (purchaseDetails.pendingCompletePurchase) {
@@ -92,5 +92,4 @@ class PurchaseDemo {
       }
     }
   }
-
 }

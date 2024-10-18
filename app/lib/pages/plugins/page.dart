@@ -29,6 +29,7 @@ class _PluginsPageState extends State<PluginsPage> {
   bool filterChat = true;
   bool filterMemories = true;
   bool filterExternal = true;
+  bool filterCalls = true;
 
   UserSubscriptionFire userSubscriptionFire = UserSubscriptionFire();
 
@@ -38,6 +39,7 @@ class _PluginsPageState extends State<PluginsPage> {
       filterChat = true;
       filterMemories = false;
       filterExternal = false;
+      filterCalls = false;
     }
     pluginLoading = List.filled(plugins.length, false);
     super.initState();
@@ -87,6 +89,7 @@ class _PluginsPageState extends State<PluginsPage> {
         .where((p) =>
             (p.worksWithChat() && filterChat) ||
             (p.worksWithMemories() && filterMemories) ||
+            (p.worksWithCalls() && filterCalls) ||
             (p.worksExternally() && filterExternal))
         .toList();
 
@@ -282,6 +285,34 @@ class _PluginsPageState extends State<PluginsPage> {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          filterCalls = !filterCalls;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: filterCalls
+                              ? Colors.deepPurple
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                          border: filterCalls
+                              ? Border.all(color: Colors.deepPurple)
+                              : Border.all(color: Colors.grey),
+                        ),
+                        child: const Text(
+                          'Calls',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -340,8 +371,11 @@ class _PluginsPageState extends State<PluginsPage> {
                       ),
                       placeholder: (context, url) =>
                           const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                        backgroundColor: Colors.white,
+                        maxRadius: 28,
+                        child: Icon(Icons.error),
+                      ),
                     ),
                     title: Text(
                       plugin.name,
@@ -378,61 +412,74 @@ class _PluginsPageState extends State<PluginsPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Row(
+                        Wrap(
+                          runSpacing: 5,
+                          spacing: 5,
                           children: [
-                            plugin.worksWithMemories()
-                                ? Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: const Text(
-                                      'Memories',
-                                      style: TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                            SizedBox(width: plugin.worksWithChat() ? 8 : 0),
-                            plugin.worksWithChat()
-                                ? Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: const Text(
-                                      'Chat',
-                                      style: TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                            SizedBox(width: plugin.worksExternally() ? 8 : 0),
-                            plugin.worksExternally()
-                                ? Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: const Text(
-                                      'Integration',
-                                      style: TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
+                            if (plugin.worksWithMemories())
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Text(
+                                  'Memories',
+                                  style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            if (plugin.worksWithChat())
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Text(
+                                  'Chat',
+                                  style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            if (plugin.worksExternally())
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Text(
+                                  'Integration',
+                                  style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            if (plugin.worksWithCalls())
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Text(
+                                  'Calls',
+                                  style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
                           ],
                         )
                       ],
@@ -622,8 +669,9 @@ class _PluginsPageState extends State<PluginsPage> {
   Widget? manageUserIsSubscribed({required String name, required String id}) {
     bool isPremiumUser = false;
     for (var element in userSubscriptionFire.userSubscriptionList) {
-      if (element.pluginId == id) {
+      if (element.pluginId == id && element.isPremium == true) {
         isPremiumUser = element.isPremium ?? false;
+        break;
       }
     }
     if (name == "Eva English Teacher" && isPremiumUser == false) {

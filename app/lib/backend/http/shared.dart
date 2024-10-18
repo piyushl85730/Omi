@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:instabug_http_client/instabug_http_client.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:logger/logger.dart';
 
 Future<String> getAuthHeader() async {
   DateTime? expiry = DateTime.fromMillisecondsSinceEpoch(
@@ -46,13 +47,16 @@ Future<http.Response?> makeApiCall({
     }
 
     final client = InstabugHttpClient();
+    Logger().t(headers);
     print('POST Request:');
     print('URL: $url');
     print('Hea: $headers');
     print('Body: $body');
     if (method == 'POST') {
       headers['Content-Type'] = 'application/json';
-      return await client.post(Uri.parse(url), headers: headers, body: body).timeout(const Duration(seconds: 30));
+      return await client
+          .post(Uri.parse(url), headers: headers, body: body)
+          .timeout(const Duration(seconds: 30));
     } else if (method == 'GET') {
       return await client.get(Uri.parse(url), headers: headers);
     } else if (method == 'DELETE') {

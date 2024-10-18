@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friend_private/backend/preferences.dart';
@@ -12,13 +11,11 @@ import 'package:friend_private/pages/speaker_id/page.dart';
 import 'package:friend_private/utils/analytics/mixpanel.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/auth.dart';
 import '../onboarding/wrapper.dart';
-import '../plugins_subscription/plugin_sub_list.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -41,8 +38,10 @@ class _SettingsPageState extends State<SettingsPage> {
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     optInAnalytics = SharedPreferencesUtil().optInAnalytics;
     devModeEnabled = SharedPreferencesUtil().devModeEnabled;
-    postMemoryNotificationIsChecked = SharedPreferencesUtil().postMemoryNotificationIsChecked;
-    reconnectNotificationIsChecked = SharedPreferencesUtil().reconnectNotificationIsChecked;
+    postMemoryNotificationIsChecked =
+        SharedPreferencesUtil().postMemoryNotificationIsChecked;
+    reconnectNotificationIsChecked =
+        SharedPreferencesUtil().reconnectNotificationIsChecked;
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;
       buildVersion = packageInfo.buildNumber.toString();
@@ -73,7 +72,10 @@ class _SettingsPageState extends State<SettingsPage> {
             elevation: 0,
           ),
           body: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, left: 8, right: 8),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 8,
+                right: 8),
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -97,19 +99,26 @@ class _SettingsPageState extends State<SettingsPage> {
                       );
                     }
                     setState(() => _selectedLanguage = newValue);
-                    SharedPreferencesUtil().recordingsLanguage = _selectedLanguage;
-                    MixpanelManager().recordingLanguageChanged(_selectedLanguage);
+                    SharedPreferencesUtil().recordingsLanguage =
+                        _selectedLanguage;
+                    MixpanelManager()
+                        .recordingLanguageChanged(_selectedLanguage);
                   }, _selectedLanguage),
                   ...getPreferencesWidgets(
                     onOptInAnalytics: () {
                       setState(() {
-                        optInAnalytics = !SharedPreferencesUtil().optInAnalytics;
-                        SharedPreferencesUtil().optInAnalytics = !SharedPreferencesUtil().optInAnalytics;
-                        optInAnalytics ? MixpanelManager().optInTracking() : MixpanelManager().optOutTracking();
+                        optInAnalytics =
+                            !SharedPreferencesUtil().optInAnalytics;
+                        SharedPreferencesUtil().optInAnalytics =
+                            !SharedPreferencesUtil().optInAnalytics;
+                        optInAnalytics
+                            ? MixpanelManager().optInTracking()
+                            : MixpanelManager().optOutTracking();
                       });
                     },
                     viewPrivacyDetails: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (c) => const PrivacyInfoPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => const PrivacyInfoPage()));
                       MixpanelManager().privacyDetailsPageOpened();
                     },
                     optInAnalytics: optInAnalytics,
@@ -130,10 +139,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   const SizedBox(height: 16),
                   ListTile(
-                    title: const Text('Need help?', style: TextStyle(color: Colors.white)),
+                    title: const Text('Need help?',
+                        style: TextStyle(color: Colors.white)),
                     subtitle: const Text('val@agiens.com'),
                     contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                    trailing: const Icon(Icons.arrow_forward_ios,
+                        color: Colors.white, size: 16),
                     onTap: () {
                       launchUrl(Uri.parse('mailto:val@agiens.com'));
                       MixpanelManager().supportContacted();
@@ -141,9 +152,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    title: const Text('Join the community!', style: TextStyle(color: Colors.white)),
+                    title: const Text('Join the community!',
+                        style: TextStyle(color: Colors.white)),
                     subtitle: const Text('2300+ members and counting.'),
-                    trailing: const Icon(Icons.discord, color: Colors.purple, size: 20),
+                    trailing: const Icon(Icons.discord,
+                        color: Colors.purple, size: 20),
                     onTap: () {
                       launchUrl(Uri.parse('https://discord.gg/ZutWMTJnwA'));
                       MixpanelManager().joinDiscordClicked();
@@ -160,10 +173,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       textAlign: TextAlign.start,
                     ),
                   ),
-                  getItemAddOn('Plugins Subscription', () {
-                    MixpanelManager().pluginsSubscriptionOpened();
-                    routeToPage(context, const PluginSubscriptionList());
-                  }, icon: Icons.payment),
+                  // getItemAddOn('Plugins Subscription', () {
+                  //   MixpanelManager().pluginsSubscriptionOpened();
+                  //   routeToPage(context, const PluginSubscriptionList());
+                  // }, icon: Icons.payment),
                   getItemAddOn('Plugins', () {
                     MixpanelManager().pluginsOpened();
                     routeToPage(context, const PluginsPage());
@@ -227,13 +240,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       context: context,
                       barrierDismissible: false,
                       builder: (c) => getDialog(
-                        context, () {
+                        context,
+                        () {
                           Navigator.of(context).pop();
-                        }, () async => {
-                        await signOut(context),
-                        SharedPreferencesUtil().clear(),
-                        routeToPage(context, const OnboardingWrapper(), replace: true),
-                      },
+                        },
+                        () async => {
+                          await signOut(context),
+                          SharedPreferencesUtil().clear(),
+                          routeToPage(context, const OnboardingWrapper(),
+                              replace: true),
+                        },
                         'Logout',
                         'Are you sure you want to log out?',
                         singleButton: false,
@@ -245,13 +261,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     padding: const EdgeInsets.all(8),
                     child: GestureDetector(
                       onTap: () {
-                        Clipboard.setData(ClipboardData(text: SharedPreferencesUtil().uid));
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(content: Text('UID copied to clipboard')));
+                        Clipboard.setData(
+                            ClipboardData(text: SharedPreferencesUtil().uid));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('UID copied to clipboard')));
                       },
                       child: Text(
                         SharedPreferencesUtil().uid,
-                        style: const TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 150, 150, 150),
+                            fontSize: 16),
                         maxLines: 1,
                         textAlign: TextAlign.center,
                       ),
@@ -263,7 +283,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       alignment: Alignment.center,
                       child: Text(
                         'Version: $version+$buildVersion',
-                        style: const TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 150, 150, 150),
+                            fontSize: 16),
                       ),
                     ),
                   ),

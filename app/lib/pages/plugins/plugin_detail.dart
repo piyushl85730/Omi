@@ -9,9 +9,11 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/firebase/service/user_subsrtiption_fire.dart';
 import 'package:friend_private/pages/plugins/instructions.dart';
+import 'package:friend_private/pages/plugins/widget/schedule_call_select_day_of_week.dart';
 import 'package:friend_private/pages/plugins_subscription/subscription_handler.dart';
 import 'package:friend_private/utils/analytics/mixpanel.dart';
 import 'package:friend_private/utils/connectivity_controller.dart';
+import 'package:friend_private/utils/library/custom_circle_indicator.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:friend_private/widgets/extensions/string.dart';
@@ -38,7 +40,8 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
 
   checkSetupCompleted() {
     // TODO: move check to backend
-    isPluginSetupCompleted(widget.plugin.externalIntegration!.setupCompletedUrl)
+    isPluginSetupCompleted(
+            widget.plugin.externalIntegration?.setupCompletedUrl ?? "")
         .then((value) {
       setState(() => setupCompleted = value);
     });
@@ -48,7 +51,8 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
   void initState() {
     if (widget.plugin.worksExternally()) {
       getPluginMarkdown(
-              widget.plugin.externalIntegration!.setupInstructionsFilePath)
+              widget.plugin.externalIntegration?.setupInstructionsFilePath ??
+                  "")
           .then((value) {
         value = value.replaceAll(
           '](assets/',
@@ -223,7 +227,7 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      widget.plugin.chatPrompt!,
+                      widget.plugin.chatPrompt ?? "",
                       style: const TextStyle(
                           color: Colors.grey, fontSize: 15, height: 1.4),
                     ),
@@ -256,7 +260,7 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                     ),
                     subtitle: Text(
-                      'Triggers on ${widget.plugin.externalIntegration!.getTriggerOnString()}',
+                      'Triggers on ${widget.plugin.externalIntegration?.getTriggerOnString()}',
                       style: const TextStyle(
                           fontWeight: FontWeight.w400, fontSize: 14),
                     ),
@@ -306,59 +310,78 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(width: 16),
-                  widget.plugin.worksWithMemories()
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(16),
+                  Expanded(
+                    child: Wrap(
+                      runSpacing: 5,
+                      spacing: 5,
+                      children: [
+                        if (widget.plugin.worksWithMemories())
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Memories',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          child: const Text(
-                            'Memories',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
+                        if (widget.plugin.worksWithMemories())
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Chat',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                  SizedBox(width: widget.plugin.worksWithChat() ? 8 : 0),
-                  widget.plugin.worksWithMemories()
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(16),
+                        if (widget.plugin.worksExternally())
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Integration',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          child: const Text(
-                            'Chat',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
+                        if (widget.plugin.worksWithCalls())
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Calls',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                  SizedBox(width: widget.plugin.worksWithChat() ? 8 : 0),
-                  widget.plugin.worksExternally()
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Text(
-                            'Integration',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -415,6 +438,7 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
               ),
             ),
             const SizedBox(height: 24),
+            manageScheduleCallWidget(),
           ],
         ));
   }
@@ -457,8 +481,9 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
   Widget? subscriptionWidget() {
     bool isPremiumUser = false;
     for (var element in widget.userSubscriptionFire.userSubscriptionList) {
-      if (element.pluginId == widget.plugin.id) {
+      if (element.pluginId == widget.plugin.id && element.isPremium == true) {
         isPremiumUser = element.isPremium ?? false;
+        break;
       }
     }
     if (widget.plugin.name == "Eva English Teacher" && isPremiumUser == false) {
@@ -481,10 +506,12 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
 
   Future<void> manageSubscription({required BuildContext context}) async {
     debugPrint("widget.plugin.id widget.plugin.id :- ${widget.plugin.id}");
+    showLoader(context);
     var data =
         await rcPurchaseController.onPurchase(productId: widget.plugin.id);
     if (data is String) {
-      debugPrint("error -> $data");
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data)));
     } else if (data is PurchaseDetails) {
       Map<String, dynamic> passDate = {
         'userId': SharedPreferencesUtil().uid,
@@ -509,9 +536,37 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
         widget.userSubscriptionFire.userSubscriptionList = [];
         widget.userSubscriptionFire.userSubscriptionList
             .addAll(await widget.userSubscriptionFire.getUserSubscription());
+        Navigator.of(context).pop();
         setState(() {});
+      } else {
+        Navigator.of(context).pop();
       }
       debugPrint("response response :- ${response?.body}");
+    } else {
+      Navigator.of(context).pop();
     }
+  }
+
+  Widget manageScheduleCallWidget() {
+    if (widget.plugin.worksWithCalls()) {
+      return UnconstrainedBox(
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0))),
+          onPressed: () async {
+            await routeToPage(context, ScheduleCallSelectDayOfWeek());
+          },
+          child: const Text(
+            'Schedule call',
+            style: TextStyle(
+                color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 }

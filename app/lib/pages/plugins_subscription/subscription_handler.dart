@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/pages/plugins_subscription/purchase_demo.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -29,13 +30,15 @@ class RCPurchaseController {
     );
 
     unawaited(_inAppPurchase.buyConsumable(purchaseParam: purchaseParam));
-    PurchaseDetails? purchaseStatus = await managePurchase();
+    dynamic purchaseStatus = await managePurchase();
     cancelPurchaseStream();
-    if (purchaseStatus != null) {
+    if (purchaseStatus != null && purchaseStatus is PurchaseDetails) {
+      return purchaseStatus;
+    } else if (purchaseStatus is String) {
       return purchaseStatus;
     }
 
-    return "something went wrong";
+    return "Couldn't complete your purchase!";
   }
 
   restorePurchases() async {
@@ -55,10 +58,10 @@ class RCPurchaseController {
     return "No active subscription found!";
   }
 
-  Future<PurchaseDetails?> managePurchase({
+  Future<dynamic> managePurchase({
     bool isRestorePurchases = false,
   }) async {
-    Completer<PurchaseDetails?> completer = Completer<PurchaseDetails?>();
+    Completer<dynamic> completer = Completer<dynamic>();
     bool isCompleted = false;
     try {
       subscription = _inAppPurchase.purchaseStream.listen(
@@ -66,7 +69,6 @@ class RCPurchaseController {
           PurchaseDemo.listenToPurchaseUpdated(
             event,
             onPurchased: (purchaseDetails) {
-              debugPrint("call purchaseDetails purchased");
               if (!isCompleted) {
                 isCompleted = true;
                 completer.complete(purchaseDetails);
@@ -86,11 +88,11 @@ class RCPurchaseController {
                 completer.complete(null);
               }
             },
-            onFailed: () {
+            onFailed: (e) {
               debugPrint("!!!!!!! onFailed");
               if (!isCompleted) {
                 isCompleted = true;
-                completer.complete(null);
+                completer.complete(e);
               }
             },
           );
