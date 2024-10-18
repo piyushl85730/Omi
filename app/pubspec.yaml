@@ -2,7 +2,7 @@ name: friend_private
 description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.24+79
+version: 1.0.7+9
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -56,12 +56,12 @@ dependencies:
   ml_linalg: any
   objectbox: ^4.0.1
   objectbox_flutter_libs: any
-  flutter_foreground_task: ^8.2.0
+  flutter_foreground_task: ^8.10.0
   deepgram_speech_to_text: ^2.1.1
   upgrader: ^10.3.0
   crypto: ^3.0.3
   encrypt: ^5.0.3
-  flutter_markdown: ^0.7.2+1
+  #flutter_markdown: ^0.7.2+1
   file_picker: ^8.0.5
   record: ^5.1.2
   onesignal_flutter: ^5.1.2
@@ -90,7 +90,12 @@ dependencies:
   webview_flutter: ^4.8.0
   flutter_sound: ^9.10.0
   audio_session:
-
+  firebase_remote_config: ^5.0.4
+  cloud_firestore: ^5.4.0
+  markdown: ^7.2.2
+  purchases_flutter: ^8.1.4
+  in_app_purchase: ^3.2.0
+  in_app_purchase_storekit: ^0.3.18+1
 
 dependency_overrides:
   http: ^1.2.1

@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,33 +15,43 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/env/dev_env.dart';
 import 'package:friend_private/env/env.dart';
 import 'package:friend_private/env/prod_env.dart';
-import 'package:friend_private/firebase_options_dev.dart' as dev;
-import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/services/notification_service.dart';
+import 'package:friend_private/services/remote_config_service.dart';
 import 'package:friend_private/utils/analytics/growthbook.dart';
 import 'package:friend_private/utils/analytics/mixpanel.dart';
 import 'package:friend_private/utils/features/calendar.dart';
+import 'package:friend_private/utils/no_scroll_glow.dart';
+import 'package:friend_private/utils/purchase/constant.dart';
+import 'package:friend_private/utils/purchase/store_config.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
 import 'package:opus_flutter/opus_flutter.dart' as opus_flutter;
 
+Future<void> setupRemoteConfig() async {
+  late RemoteConfigService remoteConfigService;
+  remoteConfigService = await RemoteConfigService.getInstance();
+  await remoteConfigService.initialize();
+}
+
 Future<bool> _init() async {
   ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
   if (F.env == Environment.prod) {
-    await Firebase.initializeApp(options: prod.DefaultFirebaseOptions.currentPlatform, name: 'prod');
+    await Firebase.initializeApp();
   } else {
-    await Firebase.initializeApp(options: dev.DefaultFirebaseOptions.currentPlatform, name: 'dev');
+    await Firebase.initializeApp();
   }
 
+  await setupRemoteConfig();
   await NotificationService.instance.initialize();
   await SharedPreferencesUtil.init();
   await ObjectBoxUtil.init();
   await MixpanelManager.init();
-
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   listenAuthTokenChanges();
   bool isAuth = false;
   try {
@@ -61,9 +74,17 @@ Future<bool> _init() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isIOS) {
+    StoreConfig(store: StoreT.appleStore, apiKey: appleApiKey);
+  } else if (Platform.isAndroid) {
+    StoreConfig(store: StoreT.googlePlay, apiKey: googleApiKey);
+  }
+  //await Purchases.configure(PurchasesConfiguration("your_public_sdk_key"));
   if (F.env == Environment.prod) {
+    debugPrint("called Prod");
     Env.init(ProdEnv());
   } else {
+    debugPrint("called Dev");
     Env.init(DevEnv());
   }
   FlutterForegroundTask.initCommunicationPort();
@@ -86,7 +107,8 @@ void main() async {
           );
         }
         FlutterError.onError = (FlutterErrorDetails details) {
-          Zone.current.handleUncaughtError(details.exception, details.stack ?? StackTrace.empty);
+          Zone.current.handleUncaughtError(
+              details.exception, details.stack ?? StackTrace.empty);
         };
         Instabug.setColorTheme(ColorTheme.dark);
         runApp(MyApp(isAuth: isAuth));
@@ -106,10 +128,12 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
 
   // The navigator key is necessary to navigate using static methods
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -125,6 +149,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return WithForegroundTask(
       child: MaterialApp(
+        scrollBehavior: NoGlowScrollBehavior(),
         navigatorObservers: [
           if (Env.instabugApiKey != null) InstabugNavigatorObserver(),
         ],
@@ -151,7 +176,10 @@ class _MyAppState extends State<MyApp> {
             // ),
             snackBarTheme: SnackBarThemeData(
               backgroundColor: Colors.grey.shade900,
-              contentTextStyle: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+              contentTextStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500),
             ),
             textTheme: TextTheme(
               titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
@@ -162,7 +190,8 @@ class _MyAppState extends State<MyApp> {
             textSelectionTheme: const TextSelectionThemeData(
               cursorColor: Colors.white,
               selectionColor: Colors.deepPurple,
-            )),
+            ),
+        ),
         themeMode: ThemeMode.dark,
         home: (SharedPreferencesUtil().onboardingCompleted && widget.isAuth)
             ? const HomePageWrapper()

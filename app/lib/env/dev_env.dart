@@ -4,7 +4,7 @@ import 'env.dart';
 
 part 'dev_env.g.dart';
 
-@Envied(allowOptionalFields: true, path: '.dev.env')
+@Envied(allowOptionalFields: true, path: '.env')
 final class DevEnv implements EnvFields {
   DevEnv();
 
@@ -35,4 +35,8 @@ final class DevEnv implements EnvFields {
   @override
   @EnviedField(varName: 'GOOGLE_MAPS_API_KEY', obfuscate: true)
   final String? googleMapsApiKey = _DevEnv.googleMapsApiKey;
+
+  @override
+  @EnviedField(varName: 'RECHARGEAPP_API_KEY', obfuscate: true)
+  final String? rechargeAppApiKey = _DevEnv.rechargeAppApiKey;
 }

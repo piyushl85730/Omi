@@ -88,8 +88,11 @@ Future<UserCredential?> signInWithGoogle() async {
       idToken: googleAuth?.idToken,
     );
 
+    debugPrint('------------ credential ------------ $credential');
+
     // Once signed in, return the UserCredential
     var result = await FirebaseAuth.instance.signInWithCredential(credential);
+    debugPrint('------------ result ------------ $result');
     var givenName = result.additionalUserInfo?.profile?['given_name'] ?? '';
     var familyName = result.additionalUserInfo?.profile?['family_name'] ?? '';
     var email = result.additionalUserInfo?.profile?['email'] ?? '';
@@ -115,7 +118,7 @@ listenAuthTokenChanges() {
       debugPrint('User is currently signed out or the token has been revoked!');
       SharedPreferencesUtil().authToken = '';
     } else {
-      // debugPrint('User is signed in!'); // FIXME, triggered too many times.
+      debugPrint('User is signed in!');
       try {
         if (SharedPreferencesUtil().authToken.isEmpty ||
             DateTime.now().millisecondsSinceEpoch > SharedPreferencesUtil().tokenExpirationTime) {

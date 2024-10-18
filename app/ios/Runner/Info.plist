@@ -53,9 +53,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Bluetooth permission is required to connect with your Friend Wearable.</string>
+	<string>Bluetooth permission is required to connect with your Luca Wearable.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Bluetooth permission is required to connect with your Friend Wearable.</string>
+	<string>Bluetooth permission is required to connect with your Luca Wearable.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Access most functions for calendar viewing and editing.</string>
 	<key>NSCalendarsUsageDescription</key>
@@ -109,5 +109,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSUserTrackingUsageDescription</key>
+    <string>We use your data to enhance your experience.</string>
 </dict>
 </plist>

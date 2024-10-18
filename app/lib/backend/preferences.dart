@@ -9,7 +9,8 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
-  static final SharedPreferencesUtil _instance = SharedPreferencesUtil._internal();
+  static final SharedPreferencesUtil _instance =
+      SharedPreferencesUtil._internal();
   static SharedPreferences? _preferences;
 
   factory SharedPreferencesUtil() {
@@ -35,9 +36,11 @@ class SharedPreferencesUtil {
 
   String get deviceName => getString('deviceName') ?? '';
 
-  set deviceCodec(BleAudioCodec value) => saveString('deviceCodec', mapCodecToName(value));
+  set deviceCodec(BleAudioCodec value) =>
+      saveString('deviceCodec', mapCodecToName(value));
 
-  BleAudioCodec get deviceCodec => mapNameToCodec(getString('deviceCodec') ?? '');
+  BleAudioCodec get deviceCodec =>
+      mapNameToCodec(getString('deviceCodec') ?? '');
 
   String get openAIApiKey => getString('openaiApiKey') ?? '';
 
@@ -55,13 +58,16 @@ class SharedPreferencesUtil {
 
   set webhookOnMemoryCreated(String value) => saveString('webhookUrl', value);
 
-  String get webhookOnTranscriptReceived => getString('transcriptServerUrl') ?? '';
+  String get webhookOnTranscriptReceived =>
+      getString('transcriptServerUrl') ?? '';
 
-  set webhookOnTranscriptReceived(String value) => saveString('transcriptServerUrl', value);
+  set webhookOnTranscriptReceived(String value) =>
+      saveString('transcriptServerUrl', value);
 
   String get recordingsLanguage => getString('recordingsLanguage') ?? 'en';
 
-  set recordingsLanguage(String value) => saveString('recordingsLanguage', value);
+  set recordingsLanguage(String value) =>
+      saveString('recordingsLanguage', value);
 
   bool get useFriendApiKeys => getBool('useFriendApiKeys') ?? true;
 
@@ -73,11 +79,36 @@ class SharedPreferencesUtil {
 
   String get customWebsocketUrl => getString('customWebsocketUrl') ?? '';
 
-  set customWebsocketUrl(String value) => saveString('customWebsocketUrl', value);
+  set customWebsocketUrl(String value) =>
+      saveString('customWebsocketUrl', value);
 
-  String gptCompletionCache(String key) => getString('gptCompletionCache:$key') ?? '';
+  //
+  String get apiBaseUrl => getString('apiBaseUrl') ?? '';
 
-  setGptCompletionCache(String key, String value) => saveString('gptCompletionCache:$key', value);
+  set apiBaseUrl(String value) => saveString('apiBaseUrl', value);
+
+  String get googleMapsApiKey => getString('googleMapsApiKey') ?? '';
+
+  set googleMapsApiKey(String value) => saveString('googleMapsApiKey', value);
+
+  String get growthBookApiKey => getString('growthBookApiKey') ?? '';
+
+  set growthBookApiKey(String value) => saveString('growthBookApiKey', value);
+
+  String get mixpanelProjectToken => getString('mixpanelProjectToken') ?? '';
+
+  set mixpanelProjectToken(String value) =>
+      saveString('mixpanelProjectToken', value);
+
+  String get openaiApiKey => getString('openaiApiKey') ?? '';
+
+  set openaiApiKey(String value) => saveString('openaiApiKey', value);
+
+  String gptCompletionCache(String key) =>
+      getString('gptCompletionCache:$key') ?? '';
+
+  setGptCompletionCache(String key, String value) =>
+      saveString('gptCompletionCache:$key', value);
 
   bool get optInAnalytics => getBool('optInAnalytics') ?? true;
 
@@ -89,27 +120,35 @@ class SharedPreferencesUtil {
 
   bool get coachNotificationIsChecked => getBool('coachIsChecked') ?? true;
 
-  set coachNotificationIsChecked(bool value) => saveBool('coachIsChecked', value);
+  set coachNotificationIsChecked(bool value) =>
+      saveBool('coachIsChecked', value);
 
-  bool get postMemoryNotificationIsChecked => getBool('postMemoryNotificationIsChecked') ?? true;
+  bool get postMemoryNotificationIsChecked =>
+      getBool('postMemoryNotificationIsChecked') ?? true;
 
-  set postMemoryNotificationIsChecked(bool value) => saveBool('postMemoryNotificationIsChecked', value);
+  set postMemoryNotificationIsChecked(bool value) =>
+      saveBool('postMemoryNotificationIsChecked', value);
 
-  bool get reconnectNotificationIsChecked => getBool('reconnectNotificationIsChecked') ?? true;
+  bool get reconnectNotificationIsChecked =>
+      getBool('reconnectNotificationIsChecked') ?? true;
 
-  set reconnectNotificationIsChecked(bool value) => saveBool('reconnectNotificationIsChecked', value);
+  set reconnectNotificationIsChecked(bool value) =>
+      saveBool('reconnectNotificationIsChecked', value);
 
   List<String> get recordingPaths => getStringList('recordingPaths') ?? [];
 
-  set recordingPaths(List<String> value) => saveStringList('recordingPaths', value);
+  set recordingPaths(List<String> value) =>
+      saveStringList('recordingPaths', value);
 
   bool get hasSpeakerProfile => getBool('hasSpeakerProfile') ?? false;
 
   set hasSpeakerProfile(bool value) => saveBool('hasSpeakerProfile', value);
 
-  String get locationPermissionState => getString('locationPermissionState') ?? 'UNKNOWN';
+  String get locationPermissionState =>
+      getString('locationPermissionState') ?? 'UNKNOWN';
 
-  set locationPermissionState(String value) => saveString('locationPermissionState', value);
+  set locationPermissionState(String value) =>
+      saveString('locationPermissionState', value);
 
   List<Plugin> get pluginsList {
     final List<String> plugins = getStringList('pluginsList') ?? [];
@@ -117,9 +156,62 @@ class SharedPreferencesUtil {
   }
 
   set pluginsList(List<Plugin> value) {
-    final List<String> plugins = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> plugins =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('pluginsList', plugins);
   }
+
+  /// Products List screen
+  List<Product> get subProductsList {
+    final List<String> products = getStringList('subProductList') ?? [];
+    var data = jsonDecode(products.toString());
+    return (data as List)
+        .map((productJson) => Product.fromJson(productJson))
+        .toList();
+  }
+
+  /// Set products list screen
+  set subProductsList(List<Product> value) {
+    final List<String> products =
+    value.map((e) => jsonEncode(e.toJson())).toList();
+    saveStringList('subProductList', products);
+  }
+
+  /// Subscription plugins get
+  List<String> get activeSubscriptionPluginList {
+    print('------ Get sub -----');
+    print(getStringList('activeSubPluginList'));
+   return getStringList('activeSubPluginList') ?? [];
+  }
+
+  set activeSubscriptionPluginList(List<String> value) {
+    print('value');
+    print(value);
+    saveStringList('activeSubPluginList', value);
+  }
+
+  /*List<um.UserMemoriesModel> get pluginMemoriesList {
+    final String plugins = getString('pluginMemories') ?? "";
+    final List<um.UserMemoriesModel> userMemoriesModels =
+        um.userMemoriesModelListFromJson(plugins);
+    return userMemoriesModels;
+  }
+
+  set pluginMemoriesList(List<um.UserMemoriesModel> value) {
+    final String plugins = um.userMemoriesModelListToJson(value);
+    saveString('pluginMemories', plugins);
+  }
+
+  List<PluginModel> get firePluginsList {
+    final String plugins = getString('firePlugins') ?? "";
+    final List<PluginModel> pluginsList = pluginModelFromJson(plugins);
+    return pluginsList;
+  }
+
+  set firePluginsList(List<PluginModel> value) {
+    final String plugins = pluginModelToJson(value);
+    saveString('firePlugins', plugins);
+  }*/
 
   enablePlugin(String value) {
     final List<Plugin> plugins = pluginsList;
@@ -135,17 +227,22 @@ class SharedPreferencesUtil {
     pluginsList = plugins;
   }
 
-  String get selectedChatPluginId => getString('selectedChatPluginId2') ?? 'no_selected';
+  String get selectedChatPluginId =>
+      getString('selectedChatPluginId2') ?? 'no_selected';
 
-  set selectedChatPluginId(String value) => saveString('selectedChatPluginId2', value);
+  set selectedChatPluginId(String value) =>
+      saveString('selectedChatPluginId2', value);
 
   List<TranscriptSegment> get transcriptSegments {
     final List<String> segments = getStringList('transcriptSegments') ?? [];
-    return segments.map((e) => TranscriptSegment.fromJson(jsonDecode(e))).toList();
+    return segments
+        .map((e) => TranscriptSegment.fromJson(jsonDecode(e)))
+        .toList();
   }
 
   set transcriptSegments(List<TranscriptSegment> value) {
-    final List<String> segments = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> segments =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('transcriptSegments', segments);
   }
 
@@ -155,7 +252,8 @@ class SharedPreferencesUtil {
   }
 
   set failedMemories(List<ServerMemory> value) {
-    final List<String> memories = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> memories =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('failedServerMemories', memories);
   }
 
@@ -165,7 +263,8 @@ class SharedPreferencesUtil {
   }
 
   set cachedMemories(List<ServerMemory> value) {
-    final List<String> memories = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> memories =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('cachedMemories', memories);
   }
 
@@ -175,7 +274,8 @@ class SharedPreferencesUtil {
   }
 
   set cachedMessages(List<ServerMessage> value) {
-    final List<String> messages = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> messages =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('cachedMessages', messages);
   }
 
@@ -212,7 +312,8 @@ class SharedPreferencesUtil {
   }
 
   set modifiedMemoryDetails(ServerMemory? value) {
-    saveString('modifiedMemoryDetails', value == null ? '' : jsonEncode(value.toJson()));
+    saveString('modifiedMemoryDetails',
+        value == null ? '' : jsonEncode(value.toJson()));
   }
 
   bool get backupsEnabled => getBool('backupsEnabled2') ?? true;
@@ -221,7 +322,8 @@ class SharedPreferencesUtil {
 
   String get lastDailySummaryDay => getString('lastDailySummaryDate') ?? '';
 
-  set lastDailySummaryDay(String value) => saveString('lastDailySummaryDate', value);
+  set lastDailySummaryDay(String value) =>
+      saveString('lastDailySummaryDate', value);
 
   Future<bool> saveString(String key, String value) async {
     return await _preferences?.setString(key, value) ?? false;
@@ -271,33 +373,47 @@ class SharedPreferencesUtil {
     return await _preferences?.clear() ?? false;
   }
 
-  set scriptCategoriesAndEmojisExecuted(bool value) => saveBool('scriptCategoriesAndEmojisExecuted', value);
+  set scriptCategoriesAndEmojisExecuted(bool value) =>
+      saveBool('scriptCategoriesAndEmojisExecuted', value);
 
-  bool get scriptCategoriesAndEmojisExecuted => getBool('scriptCategoriesAndEmojisExecuted') ?? false;
+  bool get scriptCategoriesAndEmojisExecuted =>
+      getBool('scriptCategoriesAndEmojisExecuted') ?? false;
 
-  set scriptMemoryVectorsExecuted(bool value) => saveBool('scriptMemoryVectorsExecuted2', value);
+  set scriptMemoryVectorsExecuted(bool value) =>
+      saveBool('scriptMemoryVectorsExecuted2', value);
 
-  bool get scriptMemoryVectorsExecuted => getBool('scriptMemoryVectorsExecuted2') ?? false;
+  bool get scriptMemoryVectorsExecuted =>
+      getBool('scriptMemoryVectorsExecuted2') ?? false;
 
-  set scriptMigrateMemoriesToBack(bool value) => saveBool('scriptMigrateMemoriesToBack2', value);
+  set scriptMigrateMemoriesToBack(bool value) =>
+      saveBool('scriptMigrateMemoriesToBack2', value);
 
-  bool get scriptMigrateMemoriesToBack => getBool('scriptMigrateMemoriesToBack2') ?? false;
+  bool get scriptMigrateMemoriesToBack =>
+      getBool('scriptMigrateMemoriesToBack2') ?? false;
 
-  set scriptMemoriesToObjectBoxExecuted(bool value) => saveBool('scriptMemoriesToObjectBoxExecuted', value);
+  set scriptMemoriesToObjectBoxExecuted(bool value) =>
+      saveBool('scriptMemoriesToObjectBoxExecuted', value);
 
-  bool get scriptMemoriesToObjectBoxExecuted => getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
+  bool get scriptMemoriesToObjectBoxExecuted =>
+      getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
 
-  set pageToShowFromNotification(int value) => saveInt('pageToShowFromNotification', value);
+  set pageToShowFromNotification(int value) =>
+      saveInt('pageToShowFromNotification', value);
 
-  int get pageToShowFromNotification => getInt('pageToShowFromNotification') ?? 1;
+  int get pageToShowFromNotification =>
+      getInt('pageToShowFromNotification') ?? 1;
 
-  set subPageToShowFromNotification(String value) => saveString('subPageToShowFromNotification', value);
+  set subPageToShowFromNotification(String value) =>
+      saveString('subPageToShowFromNotification', value);
 
-  String get subPageToShowFromNotification => getString('subPageToShowFromNotification') ?? '';
+  String get subPageToShowFromNotification =>
+      getString('subPageToShowFromNotification') ?? '';
 
-  set calendarPermissionAlreadyRequested(bool value) => saveBool('calendarPermissionAlreadyRequested', value);
+  set calendarPermissionAlreadyRequested(bool value) =>
+      saveBool('calendarPermissionAlreadyRequested', value);
 
-  bool get calendarPermissionAlreadyRequested => getBool('calendarPermissionAlreadyRequested') ?? false;
+  bool get calendarPermissionAlreadyRequested =>
+      getBool('calendarPermissionAlreadyRequested') ?? false;
 
   set calendarEnabled(bool value) => saveBool('calendarEnabled', value);
 
@@ -307,7 +423,8 @@ class SharedPreferencesUtil {
 
   String get calendarId => getString('calendarId') ?? '';
 
-  set calendarType(String value) => saveString('calendarType', value); // auto, manual
+  set calendarType(String value) =>
+      saveString('calendarType', value); // auto, manual
 
   String get calendarType => getString('calendarType') ?? 'auto';
 
@@ -339,7 +456,9 @@ class SharedPreferencesUtil {
 
   String get fullName => '$givenName $familyName';
 
-  set locationPermissionRequested(bool value) => saveBool('locationPermissionRequested', value);
+  set locationPermissionRequested(bool value) =>
+      saveBool('locationPermissionRequested', value);
 
-  bool get locationPermissionRequested => getBool('locationPermissionRequested') ?? false;
+  bool get locationPermissionRequested =>
+      getBool('locationPermissionRequested') ?? false;
 }

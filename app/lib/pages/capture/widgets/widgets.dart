@@ -33,8 +33,8 @@ getConnectionStateWidgets(
       SharedPreferencesUtil().deviceId.isEmpty
           ? _getNoFriendConnectedYet(context)
           : const ScanningUI(
-              string1: 'Looking for Friend wearable',
-              string2: 'Locating your Friend device. Keep it near your phone for pairing',
+              string1: 'Looking for Luca wearable',
+              string2: 'Locating your Luca device. Keep it near your phone for pairing',
             ),
     ];
   }
@@ -167,7 +167,7 @@ _getNoFriendConnectedYet(BuildContext context) {
                     MixpanelManager().getFriendClicked();
                   },
                   child: const Text(
-                    'Get a Friend',
+                    'Get a Luca',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ))),
           const SizedBox(height: 4),
