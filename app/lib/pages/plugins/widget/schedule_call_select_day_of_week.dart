@@ -19,6 +19,10 @@ class ScheduleCallSelectDayOfWeek extends StatefulWidget {
 
 class _ScheduleCallSelectDayOfWeekState
     extends State<ScheduleCallSelectDayOfWeek> {
+  bool loading = false;
+
+  changeLoadingState() => setState(() => loading = !loading);
+
   @override
   void initState() {
     super.initState();
@@ -55,99 +59,125 @@ class _ScheduleCallSelectDayOfWeekState
           backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0,
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return SelectTimesForDayWidget(
-                            day: weekday[index].dayName,
-                            selectedList: weekday[index].callTimeModels,
-                            onSave: (list) {
-                              debugPrint(
-                                  "SelectTimesForDayWidget -> ${list.length}");
-                              weekday[index].callTimeModels.clear();
-                              weekday[index].callTimeModels.addAll(list);
-                              setState(() {});
-                            },
-                          );
-                        },
+            Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: loading
+                            ? () {}
+                            : () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return SelectTimesForDayWidget(
+                                      day: weekday[index].dayName,
+                                      selectedList:
+                                          weekday[index].callTimeModels,
+                                      onSave: (list) {
+                                        debugPrint(
+                                            "SelectTimesForDayWidget -> ${list.length}");
+                                        weekday[index].callTimeModels.clear();
+                                        weekday[index]
+                                            .callTimeModels
+                                            .addAll(list);
+                                        setState(() {});
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                        child: Container(
+                          color: Colors.grey.shade900,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: false,
+                                onChanged: (value) {},
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      weekday[index].dayName,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 14),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Wrap(
+                                      spacing: 5,
+                                      runSpacing: 5,
+                                      children: List.generate(
+                                        weekday[index].callTimeModels.length,
+                                        (ind) => Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          child: Text(weekday[index]
+                                              .callTimeModels[ind]
+                                              .timeString),
+                                        ),
+                                      ),
+                                    ),
+                                    if (weekday[index]
+                                        .callTimeModels
+                                        .isNotEmpty)
+                                      const SizedBox(height: 5),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       );
                     },
-                    child: Container(
-                      color: Colors.grey.shade900,
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: false,
-                            onChanged: (value) {},
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 5),
-                                Text(
-                                  weekday[index].dayName,
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                ),
-                                const SizedBox(height: 5),
-                                Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: List.generate(
-                                    weekday[index].callTimeModels.length,
-                                    (ind) => Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      child: Text(weekday[index]
-                                          .callTimeModels[ind]
-                                          .timeString),
-                                    ),
-                                  ),
-                                ),
-                                if (weekday[index].callTimeModels.isNotEmpty)
-                                  const SizedBox(height: 5),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 10);
-                },
-                itemCount: weekday.length,
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(height: 10);
+                    },
+                    itemCount: weekday.length,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: MaterialButton(
+                    onPressed: loading
+                        ? () {}
+                        : () async {
+                            bool isSuccessful =
+                                await setScheduleCallsApi(context);
+                            if (isSuccessful) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                    minWidth: double.maxFinite,
+                    color: Colors.deepPurple,
+                    child: const Text("Schedule"),
+                  ),
+                )
+              ],
+            ),
+            Center(
+              child: SizedBox(
+                height: 24,
+                width: 24,
+                child: loading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                      )
+                    : null,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: MaterialButton(
-                onPressed: () async {
-                  bool isSuccessful = await setScheduleCallsApi(context);
-                  if (isSuccessful) {
-                    Navigator.of(context).pop();
-                  }
-                },
-                minWidth: double.maxFinite,
-                color: Colors.deepPurple,
-                child: const Text("Schedule"),
-              ),
-            )
           ],
         ),
       ),
@@ -205,11 +235,11 @@ class _ScheduleCallSelectDayOfWeekState
   }
 
   Future<void> getScheduleCallsApi() async {
+    changeLoadingState();
     var mainHeaders = {
       "accept": "application/json",
       "Authorization": await getAuthHeader()
     };
-
     var response = await makeApiCall(
         url:
             'https://agiens-backend-662477620892.us-central1.run.app/api/v1/schedule/user',
@@ -238,7 +268,7 @@ class _ScheduleCallSelectDayOfWeekState
           }
         }
       }
-      setState(() {});
     }
+    changeLoadingState();
   }
 }
