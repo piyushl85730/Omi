@@ -48,9 +48,7 @@ class PluginModel {
         author: json["author"],
         description: json["description"],
         prompt: json["prompt"],
-        image: json["image"] == null
-            ? ""
-            : "https://raw.githubusercontent.com/maxwell882000/shopify-components/main${json["image"]}",
+        image: json["image"] ?? "",
         memories: json["memories"],
         chat: json["chat"],
         comment: json["_comment"],

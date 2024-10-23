@@ -38,6 +38,7 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
   String? instructionsMarkdown;
   bool setupCompleted = false;
   bool pluginLoading = false;
+  bool isPremiumUser = false;
 
   checkSetupCompleted() {
     // TODO: move check to backend
@@ -63,8 +64,13 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
       });
       checkSetupCompleted();
     }
-
     super.initState();
+    for (var element in widget.userSubscriptionFire.userSubscriptionList) {
+      if (element.pluginId == widget.plugin.id && element.isPremium == true) {
+        isPremiumUser = element.isPremium ?? false;
+        break;
+      }
+    }
   }
 
   RCPurchaseController rcPurchaseController = RCPurchaseController();
@@ -480,13 +486,6 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
   }
 
   Widget? subscriptionWidget() {
-    bool isPremiumUser = false;
-    for (var element in widget.userSubscriptionFire.userSubscriptionList) {
-      if (element.pluginId == widget.plugin.id && element.isPremium == true) {
-        isPremiumUser = element.isPremium ?? false;
-        break;
-      }
-    }
     if (widget.plugin.name == "Eva English Teacher" && isPremiumUser == false) {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -549,24 +548,28 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
   }
 
   Widget manageScheduleCallWidget() {
-    if (widget.plugin.worksWithCalls()) {
-      return UnconstrainedBox(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0))),
-          onPressed: () async {
-            await routeToPage(
-                context, ScheduleCallSelectDayOfWeek(plugin: widget.plugin));
-          },
-          child: const Text(
-            'Schedule call',
-            style: TextStyle(
-                color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+    if (widget.plugin.name != "Eva English Teacher" || isPremiumUser != false) {
+      if (widget.plugin.worksWithCalls()) {
+        return UnconstrainedBox(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0))),
+            onPressed: () async {
+              await routeToPage(
+                  context, ScheduleCallSelectDayOfWeek(plugin: widget.plugin));
+            },
+            child: const Text(
+              'Schedule call',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
 
     return const SizedBox();

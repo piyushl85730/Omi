@@ -23,6 +23,10 @@ class _ScheduleCallSelectDayOfWeekState
 
   changeLoadingState() => setState(() => loading = !loading);
 
+  bool loading1 = false;
+
+  changeLoadingState1() => setState(() => loading1 = !loading1);
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +73,7 @@ class _ScheduleCallSelectDayOfWeekState
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: loading
+                        onTap: loading || loading1
                             ? () {}
                             : () {
                                 showDialog(
@@ -96,10 +100,10 @@ class _ScheduleCallSelectDayOfWeekState
                           color: Colors.grey.shade900,
                           child: Row(
                             children: [
-                              Checkbox(
-                                value: false,
-                                onChanged: (value) {},
-                              ),
+                              Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Icon(
+                                      Icons.check_box_outline_blank)),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,7 +155,7 @@ class _ScheduleCallSelectDayOfWeekState
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: MaterialButton(
-                    onPressed: loading
+                    onPressed: loading || loading1
                         ? () {}
                         : () async {
                             bool isSuccessful =
@@ -167,17 +171,31 @@ class _ScheduleCallSelectDayOfWeekState
                 )
               ],
             ),
-            Center(
-              child: SizedBox(
-                height: 24,
-                width: 24,
-                child: loading
-                    ? const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(Colors.white),
-                      )
-                    : null,
+            if (loading)
+              Container(
+                color: Theme.of(context).colorScheme.primary,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            if (loading1)
+              const Center(
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -195,6 +213,7 @@ class _ScheduleCallSelectDayOfWeekState
   ];
 
   Future<bool> setScheduleCallsApi(BuildContext context) async {
+    changeLoadingState1();
     var mainHeaders = {
       "accept": "application/json",
       "Authorization": await getAuthHeader()
@@ -224,6 +243,7 @@ class _ScheduleCallSelectDayOfWeekState
 
     debugPrint("verifyOTPApi response :- ${response?.body}");
     debugPrint("verifyOTPApi response :- ${response?.statusCode}");
+    changeLoadingState1();
     if (response!.statusCode == 200 || response.statusCode == 201) {
       return true;
     }

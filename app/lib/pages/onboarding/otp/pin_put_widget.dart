@@ -7,7 +7,7 @@ Widget buildPinPut(context, controller) {
     onCompleted: (pin) => debugPrint(pin),
     keyboardType: TextInputType.number,
     defaultPinTheme: PinTheme(
-      width: MediaQuery.of(context).size.height * 0.04,
+      width: MediaQuery.of(context).size.height * 0.05,
       height: 50,
       textStyle: const TextStyle(
           fontSize: 24, color: Colors.white, fontWeight: FontWeight.w500),

@@ -69,7 +69,8 @@ class _PhonePageState extends State<PhonePage>
             ],
           ),
           Center(
-            child: SizedBox(
+            child: Container(
+              margin: const EdgeInsets.all(15),
               height: 24,
               width: 24,
               child: loading
