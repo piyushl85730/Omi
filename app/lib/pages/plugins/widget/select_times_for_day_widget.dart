@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/pages/plugins/widget/model/schedule_call.dart';
 
-//ignore: must_be_immutable
 class SelectTimesForDayWidget extends StatefulWidget {
   final String day;
-  const SelectTimesForDayWidget({super.key, required this.day});
+  final List<CallTimeModel> selectedList;
+  final Function(List<CallTimeModel>) onSave;
+
+  const SelectTimesForDayWidget(
+      {super.key,
+      required this.day,
+      required this.selectedList,
+      required this.onSave});
 
   @override
   State<SelectTimesForDayWidget> createState() =>
@@ -11,6 +18,12 @@ class SelectTimesForDayWidget extends StatefulWidget {
 }
 
 class _SelectTimesForDayWidgetState extends State<SelectTimesForDayWidget> {
+  @override
+  void initState() {
+    super.initState();
+    selectedList.addAll(widget.selectedList);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -93,7 +106,7 @@ class _SelectTimesForDayWidgetState extends State<SelectTimesForDayWidget> {
               );
             }),
             Builder(builder: (context) {
-              List<String> listSelectTime = manageSelectTime();
+              List<CallTimeModel> listSelectTime = manageSelectTime();
               if (listSelectTime.isEmpty) {
                 return const SizedBox();
               }
@@ -146,7 +159,10 @@ class _SelectTimesForDayWidgetState extends State<SelectTimesForDayWidget> {
                       backgroundColor: Colors.deepPurple,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0))),
-                  onPressed: () async {},
+                  onPressed: () async {
+                    widget.onSave(selectedList);
+                    Navigator.of(context).pop();
+                  },
                   child: const Text(
                     'Save',
                     style: TextStyle(
@@ -163,37 +179,37 @@ class _SelectTimesForDayWidgetState extends State<SelectTimesForDayWidget> {
     );
   }
 
-  List<String> selectedList = [];
+  List<CallTimeModel> selectedList = [];
 
-  List<String> list = <String>[
-    '00:00',
-    '01:00',
-    '02:00',
-    '03:00',
-    '04:00',
-    '05:00',
-    '06:00',
-    '07:00',
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-    '21:00',
-    '22:00',
-    '23:00',
+  List<CallTimeModel> list = <CallTimeModel>[
+    CallTimeModel(timeString: '00:00', hours: 0, minute: 0),
+    CallTimeModel(timeString: '01:00', hours: 1, minute: 0),
+    CallTimeModel(timeString: '02:00', hours: 2, minute: 0),
+    CallTimeModel(timeString: '03:00', hours: 3, minute: 0),
+    CallTimeModel(timeString: '04:00', hours: 4, minute: 0),
+    CallTimeModel(timeString: '05:00', hours: 5, minute: 0),
+    CallTimeModel(timeString: '06:00', hours: 6, minute: 0),
+    CallTimeModel(timeString: '07:00', hours: 7, minute: 0),
+    CallTimeModel(timeString: '08:00', hours: 8, minute: 0),
+    CallTimeModel(timeString: '09:00', hours: 9, minute: 0),
+    CallTimeModel(timeString: '10:00', hours: 10, minute: 0),
+    CallTimeModel(timeString: '11:00', hours: 11, minute: 0),
+    CallTimeModel(timeString: '12:00', hours: 12, minute: 0),
+    CallTimeModel(timeString: '13:00', hours: 13, minute: 0),
+    CallTimeModel(timeString: '14:00', hours: 14, minute: 0),
+    CallTimeModel(timeString: '15:00', hours: 15, minute: 0),
+    CallTimeModel(timeString: '16:00', hours: 16, minute: 0),
+    CallTimeModel(timeString: '17:00', hours: 17, minute: 0),
+    CallTimeModel(timeString: '18:00', hours: 18, minute: 0),
+    CallTimeModel(timeString: '19:00', hours: 19, minute: 0),
+    CallTimeModel(timeString: '20:00', hours: 20, minute: 0),
+    CallTimeModel(timeString: '21:00', hours: 21, minute: 0),
+    CallTimeModel(timeString: '22:00', hours: 22, minute: 0),
+    CallTimeModel(timeString: '23:00', hours: 23, minute: 0),
   ];
 
   Widget selectTimeWidget(
-      {required String list, bool isFromSelectedTime = false}) {
+      {required CallTimeModel list, bool isFromSelectedTime = false}) {
     return GestureDetector(
       onTap: () {
         if (isFromSelectedTime) {
@@ -216,7 +232,7 @@ class _SelectTimesForDayWidgetState extends State<SelectTimesForDayWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(list),
+            Text(list.timeString),
             if (isFromSelectedTime) ...[
               const SizedBox(height: 5),
               const Icon(
@@ -231,10 +247,13 @@ class _SelectTimesForDayWidgetState extends State<SelectTimesForDayWidget> {
     );
   }
 
-  List<String> manageSelectTime() {
-    List<String> unSelected = [];
+  List<CallTimeModel> manageSelectTime() {
+    List<CallTimeModel> unSelected = [];
     for (var element in list) {
-      if (selectedList.contains(element) == false) {
+      if (selectedList
+          .where((t) => t.timeString == element.timeString)
+          .toList()
+          .isEmpty) {
         unSelected.add(element);
       }
     }

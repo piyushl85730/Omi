@@ -97,6 +97,7 @@ dependencies:
   in_app_purchase: ^3.2.0
   in_app_purchase_storekit: ^0.3.18+1
   logger: ^2.4.0
+  pinput: ^5.0.0
 
 dependency_overrides:
   http: ^1.2.1
@@ -139,6 +140,7 @@ flutter:
     - assets/images/
     - assets/lottie_animations/
     - assets/pdfs/
+    - assets/flags/
     - assets/silero_vad.onnx
     - shorebird.yaml
   fonts:

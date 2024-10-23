@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/home/firmware_mixin.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
@@ -9,6 +8,7 @@ import 'package:gradient_borders/gradient_borders.dart';
 class FirmwareUpdate extends StatefulWidget {
   final DeviceInfo deviceInfo;
   final BTDeviceStruct? device;
+
   const FirmwareUpdate({super.key, required this.deviceInfo, this.device});
 
   @override
@@ -28,7 +28,8 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
       });
       await getLatestVersion(deviceName: widget.device!.name);
       var (a, b) = await shouldUpdateFirmware(
-          currentFirmware: widget.deviceInfo.firmwareRevision, deviceName: widget.device!.name);
+          currentFirmware: widget.deviceInfo.firmwareRevision,
+          deviceName: widget.device!.name);
       setState(() {
         shouldUpdate = b;
         updateMessage = a;
@@ -57,7 +58,8 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                   padding: const EdgeInsets.fromLTRB(14.0, 0, 14, 14),
                   child: isDownloading || isInstalling
                       ? Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 60),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, bottom: 60),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -66,8 +68,12 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                                   : 'Installing Firmware $installProgress%'),
                               const SizedBox(height: 10),
                               LinearProgressIndicator(
-                                value: (isInstalling ? installProgress : downloadProgress) / 100,
-                                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                                value: (isInstalling
+                                        ? installProgress
+                                        : downloadProgress) /
+                                    100,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
                                 backgroundColor: Colors.grey[800],
                               ),
                               const SizedBox(height: 18),
@@ -99,7 +105,8 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                                 ),
                                 const SizedBox(height: 20),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 0),
                                   decoration: BoxDecoration(
                                     border: const GradientBoxBorder(
                                       gradient: LinearGradient(colors: [
@@ -114,11 +121,14 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                                   ),
                                   child: TextButton(
                                     onPressed: () async {
-                                      routeToPage(context, const HomePageWrapper(), replace: true);
+                                      routeToPage(
+                                          context, const HomePageWrapper(),
+                                          replace: true);
                                     },
                                     child: const Text(
                                       "Finalize",
-                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
                                     ),
                                   ),
                                 )
@@ -127,8 +137,10 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Current Firmware: ${widget.deviceInfo.firmwareRevision}'),
-                                Text('Latest Firmware: ${latestFirmwareDetails['version']}'),
+                                Text(
+                                    'Current Firmware: ${widget.deviceInfo.firmwareRevision}'),
+                                Text(
+                                    'Latest Firmware: ${latestFirmwareDetails['version']}'),
                                 const SizedBox(height: 10),
                                 Text(
                                   updateMessage,
@@ -138,18 +150,21 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                                 const SizedBox(height: 20),
                                 shouldUpdate
                                     ? Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 0),
                                         decoration: BoxDecoration(
                                           border: const GradientBoxBorder(
                                             gradient: LinearGradient(colors: [
-                                              Color.fromARGB(127, 208, 208, 208),
+                                              Color.fromARGB(
+                                                  127, 208, 208, 208),
                                               Color.fromARGB(127, 188, 99, 121),
                                               Color.fromARGB(127, 86, 101, 182),
                                               Color.fromARGB(127, 126, 190, 236)
                                             ]),
                                             width: 2,
                                           ),
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         child: TextButton(
                                           onPressed: () async {
@@ -158,7 +173,9 @@ class _FirmwareUpdateState extends State<FirmwareUpdate> with FirmwareMixin {
                                           },
                                           child: const Text(
                                             "Download Firmware",
-                                            style: TextStyle(color: Colors.white, fontSize: 16),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                       )

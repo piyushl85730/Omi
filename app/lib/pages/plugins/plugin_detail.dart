@@ -23,6 +23,7 @@ class PluginDetailPage extends StatefulWidget {
   final Plugin plugin;
   final Function() onGetSubscriptionList;
   final UserSubscriptionFire userSubscriptionFire;
+
   const PluginDetailPage(
       {super.key,
       required this.plugin,
@@ -556,7 +557,8 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0))),
           onPressed: () async {
-            await routeToPage(context, ScheduleCallSelectDayOfWeek());
+            await routeToPage(
+                context, ScheduleCallSelectDayOfWeek(plugin: widget.plugin));
           },
           child: const Text(
             'Schedule call',

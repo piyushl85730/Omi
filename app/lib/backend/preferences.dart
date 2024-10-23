@@ -104,6 +104,10 @@ class SharedPreferencesUtil {
 
   set openaiApiKey(String value) => saveString('openaiApiKey', value);
 
+  String get phoneNumber => getString('phoneNumber') ?? '';
+
+  set phoneNumber(String value) => saveString('phoneNumber', value);
+
   String gptCompletionCache(String key) =>
       getString('gptCompletionCache:$key') ?? '';
 

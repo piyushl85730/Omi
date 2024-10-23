@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:friend_private/backend/http/shared.dart';
 import 'package:friend_private/backend/schema/message.dart';
 import 'package:friend_private/env/env.dart';
@@ -12,8 +11,8 @@ Future<List<ServerMessage>> getMessagesServer() async {
   // Log the request details
   print('getMessagesServer Request URL: $url');
   print('getMessagesServer Request Method: GET');
-  print('getMessagesServer Request Headers: {}');  // No headers in this case
-  print('getMessagesServer Request Body: ');  // Empty body for this request
+  print('getMessagesServer Request Headers: {}'); // No headers in this case
+  print('getMessagesServer Request Body: '); // Empty body for this request
 
   // Make the API call
   var response = await makeApiCall(
@@ -56,7 +55,7 @@ Future<ServerMessage> sendMessageServer(String text, {String? pluginId}) async {
   // Log the request details
   print('sendMessageServer Request URL: $url');
   print('sendMessageServer Request Method: POST');
-  print('sendMessageServer Request Headers: {}');  // No headers in this case
+  print('sendMessageServer Request Headers: {}'); // No headers in this case
   print('sendMessageServer Request Body: ${jsonEncode({'text': text})}');
 
   // Make the API call
@@ -94,8 +93,10 @@ Future<ServerMessage> getInitialPluginMessage(String? pluginId) async {
   // Log the request details
   print('getInitialPluginMessage Request URL: $url');
   print('getInitialPluginMessage Request Method: POST');
-  print('getInitialPluginMessage Request Headers: {}');  // No headers in this case
-  print('getInitialPluginMessage Request Body: ');  // Empty body for this request
+  print(
+      'getInitialPluginMessage Request Headers: {}'); // No headers in this case
+  print(
+      'getInitialPluginMessage Request Body: '); // Empty body for this request
 
   // Make the API call
   var response = await makeApiCall(
@@ -106,7 +107,8 @@ Future<ServerMessage> getInitialPluginMessage(String? pluginId) async {
   );
 
   // Log the response status code and body
-  print('getInitialPluginMessage Response Status Code: ${response?.statusCode}');
+  print(
+      'getInitialPluginMessage Response Status Code: ${response?.statusCode}');
   print('getInitialPluginMessage Response Body: ${response?.body}');
 
   // Handle the response

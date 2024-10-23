@@ -3,7 +3,6 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/utils/analytics/mixpanel.dart';
 import 'package:friend_private/utils/ble/connect.dart';
-import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
@@ -14,12 +13,12 @@ class ConnectedDevice extends StatefulWidget {
   final BTDeviceStruct? device;
   final int batteryLevel;
 
-  const ConnectedDevice({super.key, required this.device, required this.batteryLevel});
+  const ConnectedDevice(
+      {super.key, required this.device, required this.batteryLevel});
 
   @override
   State<ConnectedDevice> createState() => _ConnectedDeviceState();
 }
-
 
 class _ConnectedDeviceState extends State<ConnectedDevice> {
   @override
@@ -135,7 +134,8 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
               ),
               const SizedBox(height: 32),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 decoration: BoxDecoration(
                   border: const GradientBoxBorder(
                     gradient: LinearGradient(colors: [
@@ -157,7 +157,8 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                     SharedPreferencesUtil().deviceId = '';
                     SharedPreferencesUtil().deviceName = '';
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Your Luca is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
+                      content: Text(
+                          'Your Luca is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
                     ));
                     MixpanelManager().disconnectFriendClicked();
                   },

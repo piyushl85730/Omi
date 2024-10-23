@@ -163,34 +163,32 @@ class _MyAppState extends State<MyApp> {
         ],
         supportedLocales: const [Locale('en')],
         theme: ThemeData(
-            useMaterial3: false,
-            colorScheme: const ColorScheme.dark(
-              primary: Colors.black,
-              secondary: Colors.deepPurple,
-              surface: Colors.black38,
-            ),
-            // dialogTheme: const DialogTheme(
-            //   backgroundColor: Colors.black,
-            //   titleTextStyle: TextStyle(fontSize: 18, color: Colors.white),
-            //   contentTextStyle: TextStyle(fontSize: 16, color: Colors.white),
-            // ),
-            snackBarTheme: SnackBarThemeData(
-              backgroundColor: Colors.grey.shade900,
-              contentTextStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500),
-            ),
-            textTheme: TextTheme(
-              titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
-              titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
-              bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
-              labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
-            ),
-            textSelectionTheme: const TextSelectionThemeData(
-              cursorColor: Colors.white,
-              selectionColor: Colors.deepPurple,
-            ),
+          useMaterial3: false,
+          colorScheme: const ColorScheme.dark(
+            primary: Colors.black,
+            secondary: Colors.deepPurple,
+            surface: Colors.black38,
+          ),
+          // dialogTheme: const DialogTheme(
+          //   backgroundColor: Colors.black,
+          //   titleTextStyle: TextStyle(fontSize: 18, color: Colors.white),
+          //   contentTextStyle: TextStyle(fontSize: 16, color: Colors.white),
+          // ),
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: Colors.grey.shade900,
+            contentTextStyle: const TextStyle(
+                fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+          textTheme: TextTheme(
+            titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
+            titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
+            bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
+            labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.white,
+            selectionColor: Colors.deepPurple,
+          ),
         ),
         themeMode: ThemeMode.dark,
         home: (SharedPreferencesUtil().onboardingCompleted && widget.isAuth)

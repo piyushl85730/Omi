@@ -48,10 +48,10 @@ Future<http.Response?> makeApiCall({
 
     final client = InstabugHttpClient();
     Logger().t(headers);
-    print('POST Request:');
-    print('URL: $url');
-    print('Hea: $headers');
-    print('Body: $body');
+    debugPrint('POST Request:');
+    debugPrint('URL: $url');
+    debugPrint('Hea: $headers');
+    debugPrint('Body: $body');
     if (method == 'POST') {
       headers['Content-Type'] = 'application/json';
       return await client

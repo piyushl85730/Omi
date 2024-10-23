@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:friend_private/backend/preferences.dart';
 import 'package:objectbox/objectbox.dart';

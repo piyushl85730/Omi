@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:friend_private/backend/http/shared.dart';
 import 'package:friend_private/env/env.dart';
 
@@ -11,8 +10,13 @@ Future<void> saveFcmTokenServer({
   // Log the request details
   print('saveFcmTokenServer Request URL: ${Env.apiBaseUrl}v1/users/fcm-token');
   print('saveFcmTokenServer Request Method: POST');
-  print('saveFcmTokenServer Request Headers: ${jsonEncode({'Content-Type': 'application/json'})}');
-  print('saveFcmTokenServer Request Body: ${jsonEncode({'fcm_token': token, 'time_zone': timeZone})}');
+  print('saveFcmTokenServer Request Headers: ${jsonEncode({
+        'Content-Type': 'application/json'
+      })}');
+  print('saveFcmTokenServer Request Body: ${jsonEncode({
+        'fcm_token': token,
+        'time_zone': timeZone
+      })}');
 
   // Make the API call
   var response = await makeApiCall(
