@@ -48,13 +48,13 @@ class _OTPPageState extends State<OTPPage> with SingleTickerProviderStateMixin {
         children: [
           Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               const Text(
                 'Enter OTP',
                 style: TextStyle(color: Colors.white, fontSize: 16),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -87,7 +87,7 @@ class _OTPPageState extends State<OTPPage> with SingleTickerProviderStateMixin {
           ),
           Center(
             child: Container(
-              margin: const EdgeInsets.all(15),
+              margin: const EdgeInsets.all(10),
               height: 24,
               width: 24,
               child: loading

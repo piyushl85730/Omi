@@ -58,19 +58,19 @@ class _PhonePageState extends State<PhonePage>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               const Text(
                 'Mobile Number',
                 style: TextStyle(color: Colors.white, fontSize: 16),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               mobileTextField(),
             ],
           ),
           Center(
             child: Container(
-              margin: const EdgeInsets.all(15),
+              margin: const EdgeInsets.all(10),
               height: 24,
               width: 24,
               child: loading
