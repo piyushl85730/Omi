@@ -621,9 +621,24 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                             backgroundColor: Colors.deepPurple,
                                             onRefresh: _initiatePlugins,
                                             child: (!isPluginLoading)
-                                                ? const Center(
-                                                    child:
-                                                        Text("No record found"))
+                                                ? ListView(
+                                                    children: [
+                                                      Container(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.75,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: const Text(
+                                                              "No record found")),
+                                                    ],
+                                                  )
                                                 : const Center(
                                                     child:
                                                         CupertinoActivityIndicator()))

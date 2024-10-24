@@ -11,3 +11,6 @@
 -keep class com.builttoroam.devicecalendar.** { *; }
 
 -keep class com.pravera.flutter_foreground_task.service.** { *; }
+
+-dontwarn io.flutter.embedding.**
+-ignorewarnings

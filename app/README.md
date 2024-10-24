@@ -4,7 +4,9 @@ Check out https://docs.basedhardware.com/get_started/Setup/ for a guide on how t
 
 dart run build_runner build --delete-conflicting-outputs
 flutter run --flavor dev -t lib/main.dart
+flutter run --flavor prod -t lib/main.dart
 flutter run --flavor dev -t lib/main.dart --release
+flutter run --flavor prod -t lib/main.dart --release
 flutter build apk -t lib/main.dart --release --flavor dev
 flutter build apk -t lib/main.dart --release --flavor prod
 flutter build appbundle -t lib/main.dart --release --flavor prod
