@@ -100,27 +100,34 @@ mixin AudioChunksMixin {
 
         toProcessBytes2.storeFramePacket(value);
         audioStorage!.storeFramePacket(value);
-        if (toProcessBytes2.hasFrames() && toProcessBytes2.frames.length % 3000 == 0) {
+        if (toProcessBytes2.hasFrames() &&
+            toProcessBytes2.frames.length % 3000 == 0) {
           if (internetStatus == InternetStatus.disconnected) {
             debugPrint('No internet connection, not processing audio');
             return;
           }
-          if (await WavBytesUtil.tempWavExists()) return; // wait til that one is fully processed
+          if (await WavBytesUtil.tempWavExists()) {
+            return; // wait til that one is fully processed
+          }
 
-          Tuple2<File, List<List<int>>> data = await toProcessBytes2.createWavFile(filename: 'temp.wav');
+          Tuple2<File, List<List<int>>> data =
+              await toProcessBytes2.createWavFile(filename: 'temp.wav');
           try {
             setIsTranscribing(true);
-            List<TranscriptSegment> newSegments = await _processFileToTranscript(data.item1);
+            List<TranscriptSegment> newSegments =
+                await _processFileToTranscript(data.item1);
             setIsTranscribing(false);
             onNewSegments(newSegments, data.item2);
           } catch (e, stacktrace) {
             debugPrint('Error processing 30 seconds frame');
-            print(e);
+            debugPrint(e.toString());
             CrashReporting.reportHandledCrash(
               e,
               stacktrace,
               level: NonFatalExceptionLevel.warning,
-              userAttributes: {'seconds': (data.item2.length ~/ 100).toString()},
+              userAttributes: {
+                'seconds': (data.item2.length ~/ 100).toString()
+              },
             );
             toProcessBytes2.insertAudioBytes(data.item2);
           }
@@ -131,7 +138,7 @@ mixin AudioChunksMixin {
   }
 
   Future<List<TranscriptSegment>> _processFileToTranscript(File f) async {
-    print('transcribing file: ${f.path}');
+    debugPrint('transcribing file: ${f.path}');
     _printFileSize(f);
     return await transcribe(f);
   }

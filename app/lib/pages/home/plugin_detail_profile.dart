@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/http/api/plugins.dart';
-import 'package:friend_private/firebase/model/plugin_model.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/firebase/model/user_memories_model.dart';
 import 'package:friend_private/pages/plugins/instructions.dart';
 import 'package:friend_private/utils/other/temp.dart';
@@ -8,10 +8,10 @@ import 'package:friend_private/widgets/extensions/string.dart';
 
 class PluginDetailProfilePage extends StatefulWidget {
   final UserMemoriesModel userMemoriesModel;
-  final PluginModel pluginModel;
+  final Plugin plugin;
 
   const PluginDetailProfilePage(
-      {super.key, required this.userMemoriesModel, required this.pluginModel});
+      {super.key, required this.userMemoriesModel, required this.plugin});
 
   @override
   State<PluginDetailProfilePage> createState() =>
@@ -24,8 +24,7 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
   bool pluginLoading = false;
 
   checkSetupCompleted() {
-    isPluginSetupCompleted(
-            widget.pluginModel.externalIntegration!.setupCompletedUrl)
+    isPluginSetupCompleted(widget.plugin.externalIntegration!.setupCompletedUrl)
         .then((value) {
       setState(() => setupCompleted = value);
     });
@@ -33,14 +32,16 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
 
   @override
   void initState() {
-    if (widget.pluginModel.worksExternally()) {
-      getPluginMarkdown(widget
-              .pluginModel.externalIntegration!.setupInstructionsFilePath!)
+
+    if (widget.plugin.worksExternally()) {
+      getPluginMarkdown(
+              widget.plugin.externalIntegration!.setupInstructionsFilePath)
           .then((value) {
         value = value.replaceAll(
           '](assets/',
-          '](https://raw.githubusercontent.com/maxwell882000/shopify-components/main/plugins/instructions/${widget.pluginModel.id}/assets/',
+          '](https://raw.githubusercontent.com/maxwell882000/shopify-components/main/plugins/instructions/${widget.plugin.id}/assets/',
         );
+        //https://raw.githubusercontent.com/maxwell882000/shopify-components/main
         setState(() => instructionsMarkdown = value);
       });
       checkSetupCompleted();
@@ -53,7 +54,7 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        widget.pluginModel.worksWithMemories()
+        widget.plugin.worksWithMemories()
             ? const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
@@ -62,20 +63,20 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                 ),
               )
             : const SizedBox.shrink(),
-        widget.pluginModel.worksWithMemories()
+        widget.plugin.worksWithMemories()
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  (widget.pluginModel.memoryPrompt ?? '').decodeSting,
+                  (widget.plugin.memoryPrompt ?? '').decodeSting,
                   style: const TextStyle(
                       color: Colors.grey, fontSize: 15, height: 1.4),
                 ),
               )
             : const SizedBox.shrink(),
-        widget.pluginModel.worksWithChat()
+        widget.plugin.worksWithChat()
             ? const SizedBox(height: 16)
             : const SizedBox.shrink(),
-        widget.pluginModel.worksWithChat()
+        widget.plugin.worksWithChat()
             ? const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
@@ -84,20 +85,20 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                 ),
               )
             : const SizedBox.shrink(),
-        widget.pluginModel.worksWithChat()
+        widget.plugin.worksWithChat()
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  widget.pluginModel.chatPrompt!,
+                  widget.plugin.chatPrompt!,
                   style: const TextStyle(
                       color: Colors.grey, fontSize: 15, height: 1.4),
                 ),
               )
             : const SizedBox.shrink(),
-        widget.pluginModel.worksExternally()
+        widget.plugin.worksExternally()
             ? const SizedBox(height: 16)
             : const SizedBox.shrink(),
-        widget.pluginModel.worksExternally()
+        widget.plugin.worksExternally()
             ? ListTile(
                 onTap: () async {
                   await routeToPage(
@@ -120,15 +121,14 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                 ),
                 subtitle: Text(
-                  'Triggers on ${widget.pluginModel.externalIntegration!.getTriggerOnString()}',
+                  'Triggers on ${widget.plugin.externalIntegration!.getTriggerOnString()}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w400, fontSize: 14),
                 ),
               )
             : const SizedBox.shrink(),
-        widget.pluginModel.worksExternally() &&
-                widget.pluginModel.externalIntegration?.setupCompletedUrl !=
-                    null
+        widget.plugin.worksExternally() &&
+                widget.plugin.externalIntegration?.setupCompletedUrl != null
             ? CheckboxListTile(
                 title: const Text('Setup Completed'),
                 value: setupCompleted,
@@ -138,7 +138,7 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                 enabled: false,
               )
             : const SizedBox.shrink(),
-        widget.pluginModel.worksExternally()
+        widget.plugin.worksExternally()
             ? const SizedBox(height: 16)
             : const SizedBox.shrink(),
         const SizedBox(height: 16),
@@ -151,7 +151,7 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
               style: TextStyle(fontSize: 16),
             ),
             TextSpan(
-              text: '${widget.pluginModel.author}.',
+              text: '${widget.plugin.author}.',
               style: const TextStyle(
                   fontSize: 16,
                   fontStyle: FontStyle.italic,
@@ -171,7 +171,7 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(width: 16),
-              widget.pluginModel.worksWithMemories()
+              widget.plugin.worksWithMemories()
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
@@ -188,8 +188,8 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                       ),
                     )
                   : const SizedBox.shrink(),
-              SizedBox(width: widget.pluginModel.worksWithChat() ? 8 : 0),
-              widget.pluginModel.worksWithMemories()
+              SizedBox(width: widget.plugin.worksWithChat() ? 8 : 0),
+              widget.plugin.worksWithMemories()
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
@@ -206,8 +206,8 @@ class _PluginDetailProfilePageState extends State<PluginDetailProfilePage> {
                       ),
                     )
                   : const SizedBox.shrink(),
-              SizedBox(width: widget.pluginModel.worksWithChat() ? 8 : 0),
-              widget.pluginModel.worksExternally()
+              SizedBox(width: widget.plugin.worksWithChat() ? 8 : 0),
+              widget.plugin.worksExternally()
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),

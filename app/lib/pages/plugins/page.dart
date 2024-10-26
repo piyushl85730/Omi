@@ -321,13 +321,13 @@ class _PluginsPageState extends State<PluginsPage> {
             filteredPlugins.isEmpty
                 ? SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 64, left: 14, right: 14),
+                      padding: const EdgeInsets.only(top: 64, left: 14, right: 14),
                       child: Center(
                         child: Text(
                           ConnectivityController().isConnected.value
                               ? 'No plugins found'
                               : 'Unable to fetch plugins :(\n\nPlease check your internet connection and try again.',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
                       ),

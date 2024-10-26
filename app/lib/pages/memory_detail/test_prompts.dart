@@ -80,7 +80,7 @@ class _TestPromptsPageState extends State<TestPromptsPage> {
       controller.text,
       widget.memory.getTranscript(generate: true),
     );
-    print('response: $response');
+    debugPrint('response: $response');
     result = response.toString();
     setState(() {});
     loading = false;

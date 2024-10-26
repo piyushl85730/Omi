@@ -47,7 +47,7 @@ class _FoundDevicesState extends State<FoundDevices> {
       SharedPreferencesUtil().deviceName = btDevice.name;
       widget.goNext();
     } catch (e) {
-      print("Error fetching battery level: $e");
+      debugPrint("Error fetching battery level: $e");
       setState(() {
         _isClicked = false; // Allow clicks again if an error occurs
         _connectingToDeviceId = null; // Reset the connecting device

@@ -151,7 +151,7 @@ Future<String?> getIdToken() async {
     }
     return newToken?.token;
   } catch (e) {
-    print(e);
+    debugPrint(e.toString());
     return SharedPreferencesUtil().authToken;
   }
 }

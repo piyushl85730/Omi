@@ -119,7 +119,7 @@ class CapturePageState extends State<CapturePage>
   Geolocation? geolocation;
 
   Future<void> initiateWebsocket([BleAudioCodec? audioCodec, int? sampleRate]) async {
-    print('initiateWebsocket');
+    debugPrint('initiateWebsocket');
     BleAudioCodec codec = audioCodec ?? SharedPreferencesUtil().deviceCodec;
     sampleRate ??= (codec == BleAudioCodec.opus ? 16000 : 8000);
     await initWebSocket(
@@ -257,7 +257,7 @@ class CapturePageState extends State<CapturePage>
         file = (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
         uploadFile(file);
       } catch (e) {
-        print("creating and uploading file error: $e");
+        debugPrint("creating and uploading file error: $e");
       } // in case was a local recording and not a BLE recording
     }
 

@@ -201,13 +201,13 @@ class NotificationUtil {
     if (receivePort != null) {
       await onActionReceivedMethodImpl(receivedAction);
     } else {
-      print(
+      debugPrint(
           'onActionReceivedMethod was called inside a parallel dart isolate, where receivePort was never initialized.');
       SendPort? sendPort =
           IsolateNameServer.lookupPortByName('notification_action_port');
 
       if (sendPort != null) {
-        print(
+        debugPrint(
             'Redirecting the execution to main isolate process in listening...');
         dynamic serializedData = receivedAction.toMap();
         sendPort.send(serializedData);

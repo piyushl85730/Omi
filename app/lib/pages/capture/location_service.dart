@@ -9,6 +9,7 @@ import 'package:location/location.dart';
 class LocationService {
   Location location = Location();
   LocationData? locationData;
+
   Future<bool> enableService() async {
     bool serviceEnabled = await location.serviceEnabled();
     if (serviceEnabled) {
@@ -23,7 +24,8 @@ class LocationService {
     SharedPreferencesUtil().locationPermissionRequested = true;
     var status = await permissionStatus();
     return await isServiceEnabled() == false ||
-        (status != PermissionStatus.granted && status != PermissionStatus.deniedForever);
+        (status != PermissionStatus.granted &&
+            status != PermissionStatus.deniedForever);
   }
 
   Future<bool> isServiceEnabled() => location.serviceEnabled();
@@ -34,7 +36,7 @@ class LocationService {
       permissionGranted = await location.requestPermission();
     }
     LocationPermission perm = await Geolocator.checkPermission();
-    print('Permission: $perm');
+    debugPrint('Permission: $perm');
     SharedPreferencesUtil().locationPermissionState = perm.name;
     return permissionGranted;
   }
@@ -49,18 +51,20 @@ class LocationService {
 
   Future<PermissionStatus> permissionStatus() => location.hasPermission();
 
-  Future hasPermission() async => (await location.hasPermission()) == PermissionStatus.granted;
+  Future hasPermission() async =>
+      (await location.hasPermission()) == PermissionStatus.granted;
 
   Future<void> getDeviceLocation() async {
-    print("Getting location data");
+    debugPrint("Getting location data");
     locationData = await location.getLocation();
-    print("Location data: $locationData");
+    debugPrint("Location data: $locationData");
   }
 
   Future<Geolocation?> getGeolocationDetails() async {
     try {
       if (await hasPermission()) {
-        print('background mode enabled: ${await location.isBackgroundModeEnabled()}');
+        debugPrint(
+            'background mode enabled: ${await location.isBackgroundModeEnabled()}');
         if (await location.isBackgroundModeEnabled()) {
           if (await location.serviceEnabled()) {
             await location.requestService();
@@ -70,13 +74,17 @@ class LocationService {
           if (locationData == null) {
             return null;
           } else {
-            return Geolocation(latitude: locationData!.latitude, longitude: locationData!.longitude);
+            return Geolocation(
+                latitude: locationData!.latitude,
+                longitude: locationData!.longitude);
           }
         } else {
           try {
             await getDeviceLocation();
             if (locationData != null) {
-              return Geolocation(latitude: locationData!.latitude, longitude: locationData!.longitude);
+              return Geolocation(
+                  latitude: locationData!.latitude,
+                  longitude: locationData!.longitude);
             }
           } catch (e) {
             debugPrint("Error getting location data $e");

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/firebase/model/plugin_model.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/firebase/model/user_memories_model.dart';
 import 'package:friend_private/pages/home/plugin_tab_detail.dart';
 import 'package:friend_private/pages/home/plugin_tab_widget.dart';
@@ -7,12 +7,10 @@ import 'package:friend_private/utils/other/temp.dart';
 
 class PluginsTabPage extends StatefulWidget {
   const PluginsTabPage(
-      {required this.userMemoriesModels,
-      required this.pluginsModels,
-      super.key});
+      {required this.userMemoriesModels, required this.plugins, super.key});
 
   final List<UserMemoriesModel> userMemoriesModels;
-  final List<PluginModel> pluginsModels;
+  final List<Plugin> plugins;
 
   @override
   State<PluginsTabPage> createState() => _PluginsTabPageState();
@@ -62,7 +60,7 @@ class _PluginsTabPageState extends State<PluginsTabPage> {
                           isInstallButtonShow: false,
                           userMemoriesModel: plugin,
                           pluginsResult: plugin.pluginsResults![index],
-                          pluginModel: widget.pluginsModels
+                          plugin: widget.plugins
                               .where((t) =>
                                   t.id ==
                                   plugin.pluginsResults![index].pluginId)
@@ -73,7 +71,7 @@ class _PluginsTabPageState extends State<PluginsTabPage> {
                                 context,
                                 PluginTabDetailPage(
                                   userMemoriesModel: plugin,
-                                  pluginModel: widget.pluginsModels
+                                  plugin: widget.plugins
                                       .where((t) =>
                                           t.id ==
                                           plugin
@@ -81,7 +79,7 @@ class _PluginsTabPageState extends State<PluginsTabPage> {
                                       .toList()
                                       .first,
                                   userMemoriesModels: plugins,
-                                  pluginsModels: widget.pluginsModels,
+                                  plugins: widget.plugins,
                                 ));
                           },
                         );

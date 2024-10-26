@@ -40,7 +40,7 @@ mixin WebSocketMixin {
     if (_isConnecting) return;
     _isConnecting = true;
 
-    debugPrint('initWebSocket ${codec} ${sampleRate}');
+    debugPrint('initWebSocket $codec $sampleRate');
     if (!_internetListenerSetup) {
       _setupInternetListener(
         onConnectionSuccess: onConnectionSuccess,

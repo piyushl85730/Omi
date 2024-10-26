@@ -18,7 +18,7 @@ Future<ServerMemory?> reProcessMemory(
     changeLoadingState();
     return updatedMemory;
   } catch (err, stacktrace) {
-    print(err);
+    debugPrint(err.toString());
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);
     CrashReporting.reportHandledCrash(err, stacktrace, level: NonFatalExceptionLevel.critical, userAttributes: {
       'memory_transcript_length': memoryReporting['transcript_length'].toString(),

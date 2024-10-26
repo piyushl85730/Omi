@@ -52,7 +52,7 @@ class CalendarUtil {
         return calendarsResult.data!;
       }
     } catch (e) {
-      print('Failed to get calendars: $e');
+      debugPrint('Failed to get calendars: $e');
     }
     return [];
   }

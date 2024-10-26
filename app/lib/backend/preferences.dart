@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/memory.dart';
@@ -177,20 +178,20 @@ class SharedPreferencesUtil {
   /// Set products list screen
   set subProductsList(List<Product> value) {
     final List<String> products =
-    value.map((e) => jsonEncode(e.toJson())).toList();
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('subProductList', products);
   }
 
   /// Subscription plugins get
   List<String> get activeSubscriptionPluginList {
-    print('------ Get sub -----');
-    print(getStringList('activeSubPluginList'));
-   return getStringList('activeSubPluginList') ?? [];
+    debugPrint('------ Get sub -----');
+    debugPrint(getStringList('activeSubPluginList').toString());
+    return getStringList('activeSubPluginList') ?? [];
   }
 
   set activeSubscriptionPluginList(List<String> value) {
-    print('value');
-    print(value);
+    debugPrint('value');
+    debugPrint(value.toString());
     saveStringList('activeSubPluginList', value);
   }
 

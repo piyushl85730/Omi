@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/firebase/model/plugin_model.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/firebase/model/user_memories_model.dart';
 import 'package:friend_private/pages/home/plugin_tab_widget.dart';
 
 class PluginDetailPostPage extends StatefulWidget {
-  final PluginModel pluginModel;
+  final Plugin plugin;
   final List<UserMemoriesModel> userMemoriesModels;
-  final List<PluginModel> pluginsModels;
+  final List<Plugin> plugins;
 
   const PluginDetailPostPage({
     super.key,
-    required this.pluginModel,
+    required this.plugin,
     required this.userMemoriesModels,
-    required this.pluginsModels,
+    required this.plugins,
   });
 
   @override
@@ -31,7 +31,7 @@ class _PluginDetailPostPageState extends State<PluginDetailPostPage> {
             t.pluginsResults!.isNotEmpty &&
             t.deleted == false &&
             t.pluginsResults!
-                .where((p) => p.pluginId == widget.pluginModel.id)
+                .where((p) => p.pluginId == widget.plugin.id)
                 .toList()
                 .isNotEmpty)
         .toList();
@@ -62,19 +62,19 @@ class _PluginDetailPostPageState extends State<PluginDetailPostPage> {
                       itemCount: plugin.pluginsResults!.length,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        PluginModel pluginModelTemp = widget.pluginsModels
+                        Plugin pluginTemp = widget.plugins
                             .where((t) =>
                                 t.id == plugin.pluginsResults![index].pluginId)
                             .toList()
                             .first;
 
-                        if (pluginModelTemp.id == widget.pluginModel.id) {
+                        if (pluginTemp.id == widget.plugin.id) {
                           return PluginTabWidget(
                             isDividerShow: true,
                             isInstallButtonShow: false,
                             userMemoriesModel: plugin,
                             pluginsResult: plugin.pluginsResults![index],
-                            pluginModel: pluginModelTemp,
+                            plugin: pluginTemp,
                             onTap: () async {
                               /*await routeToPage(
                                   context,

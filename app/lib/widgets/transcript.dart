@@ -34,16 +34,23 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
       separatorBuilder: (_, __) => const SizedBox(height: 16.0),
       itemBuilder: (context, idx) {
         if (idx == 0) return SizedBox(height: widget.topMargin ? 32 : 0);
-        if (idx == widget.segments.length + 1) return const SizedBox(height: 64);
+        if (idx == widget.segments.length + 1) {
+          return const SizedBox(height: 64);
+        }
         final data = widget.segments[idx - 1];
 
         var text = data.text;
         try {
           text = utf8.decode(data.text.toString().codeUnits);
-        } catch (e) {}
+        } catch (e) {
+          debugPrint(e.toString());
+        }
         return Padding(
           padding: EdgeInsetsDirectional.fromSTEB(
-              widget.horizontalMargin ? 16 : 0, 0.0, widget.horizontalMargin ? 16 : 0, 0.0),
+              widget.horizontalMargin ? 16 : 0,
+              0.0,
+              widget.horizontalMargin ? 16 : 0,
+              0.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -51,8 +58,12 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(data.isUser ? 'assets/images/speaker_0_icon.png' : 'assets/images/speaker_1_icon.png',
-                      width: 26, height: 26),
+                  Image.asset(
+                      data.isUser
+                          ? 'assets/images/speaker_0_icon.png'
+                          : 'assets/images/speaker_1_icon.png',
+                      width: 26,
+                      height: 26),
                   const SizedBox(width: 12),
                   Text(
                     data.isUser
@@ -62,12 +73,15 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
                         : 'Speaker ${data.speakerId}',
                     style: const TextStyle(color: Colors.white, fontSize: 18),
                   ),
-                  widget.canDisplaySeconds ? const SizedBox(width: 12) : const SizedBox(),
+                  widget.canDisplaySeconds
+                      ? const SizedBox(width: 12)
+                      : const SizedBox(),
                   // pad as start-end as hours:minutes:seconds e.g. 01:23:45
                   widget.canDisplaySeconds
                       ? Text(
                           data.getTimestampString(),
-                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
                         )
                       : const SizedBox(),
                 ],
@@ -78,7 +92,8 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
                 child: SelectionArea(
                   child: Text(
                     text,
-                    style: const TextStyle(letterSpacing: 0.0, color: Colors.grey),
+                    style:
+                        const TextStyle(letterSpacing: 0.0, color: Colors.grey),
                     textAlign: TextAlign.left,
                   ),
                 ),

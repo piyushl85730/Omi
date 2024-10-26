@@ -110,8 +110,8 @@ class RCPurchaseController {
           }
         },
       ) as StreamSubscription<List<PurchaseDetails>>?;
-    } catch (_) {
-      debugPrint("^^^^^^^^^^^^ -> $_+");
+    } catch (e) {
+      debugPrint("^^^^^^^^^^^^ -> ${e.toString()}+");
     }
 
     return completer.future;

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ScheduleCallModel {
   int dayOfWeek;
   String dayName;
@@ -20,8 +18,8 @@ class CallTimeModel {
       {required this.timeString, required this.hours, required this.minute});
 }
 
-List timeSlotsModelToJson(List<TimeSlotsModel> data) => List<dynamic>.from(data.map((x) => x.toJson()));
-
+List timeSlotsModelToJson(List<TimeSlotsModel> data) =>
+    List<dynamic>.from(data.map((x) => x.toJson()));
 
 class TimeSlotsModel {
   int dayOfWeek;
@@ -33,7 +31,7 @@ class TimeSlotsModel {
   });
 
   Map<String, dynamic> toJson() => {
-    "dayOfWeek": dayOfWeek,
-    "hour": hour,
-  };
+        "dayOfWeek": dayOfWeek,
+        "hour": hour,
+      };
 }

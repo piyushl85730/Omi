@@ -28,7 +28,8 @@ class SpeakerIdPage extends StatefulWidget {
   State<SpeakerIdPage> createState() => _SpeakerIdPageState();
 }
 
-class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateMixin, WebSocketMixin {
+class _SpeakerIdPageState extends State<SpeakerIdPage>
+    with TickerProviderStateMixin, WebSocketMixin {
   final targetWordsCount = 45;
   final maxDuration = 90;
 
@@ -72,12 +73,15 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
       var speakerToWords = segments.fold<Map<int, int>>(
         {},
         (previousValue, element) {
-          previousValue[element.speakerId] = (previousValue[element.speakerId] ?? 0) + element.text.split(' ').length;
+          previousValue[element.speakerId] =
+              (previousValue[element.speakerId] ?? 0) +
+                  element.text.split(' ').length;
           return previousValue;
         },
       );
       debugPrint('speakerToWords: $speakerToWords');
-      if (speakerToWords.values.every((element) => element / segments.length > 0.2)) {
+      if (speakerToWords.values
+          .every((element) => element / segments.length > 0.2)) {
         showDialog(
           context: context,
           builder: (c) => getDialog(
@@ -105,7 +109,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
     if (uploadingProfile || profileCompleted) return;
     String text = segments.map((e) => e.text).join(' ').trim();
     int wordsCount = text.split(' ').length;
-    setState(() => percentageCompleted = (wordsCount / targetWordsCount).clamp(0, 1));
+    setState(() =>
+        percentageCompleted = (wordsCount / targetWordsCount).clamp(0, 1));
     if (percentageCompleted == 1) finalize();
   }
 
@@ -162,7 +167,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
     _bleBytesStream?.cancel();
 
     List<List<int>> raw = List.from(audioStorage.rawPackets);
-    var data = await audioStorage.createWavFile(filename: 'speaker_profile.wav');
+    var data =
+        await audioStorage.createWavFile(filename: 'speaker_profile.wav');
     await uploadProfile(data.item1);
     await uploadProfileBytes(raw, duration);
 
@@ -185,7 +191,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
       onMessageReceived: (List<TranscriptSegment> newSegments) {
         if (newSegments.isEmpty) return;
         if (segments.isEmpty) {
-          audioStorage.removeFramesRange(fromSecond: 0, toSecond: newSegments[0].start.toInt());
+          audioStorage.removeFramesRange(
+              fromSecond: 0, toSecond: newSegments[0].start.toInt());
         }
         streamStartedAtSecond ??= newSegments[0].start;
 
@@ -273,11 +280,14 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                 ? const SizedBox()
                 : TextButton(
                     onPressed: () {
-                      routeToPage(context, const HomePageWrapper(), replace: true);
+                      routeToPage(context, const HomePageWrapper(),
+                          replace: true);
                     },
                     child: const Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+                      style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.underline),
                     ),
                   ),
           ],
@@ -295,16 +305,20 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: Column(
                   children: [
-                    const DeviceAnimationWidget(sizeMultiplier: 0.2, animatedBackground: false),
+                    const DeviceAnimationWidget(
+                        sizeMultiplier: 0.2, animatedBackground: false),
                     !startedRecording
                         ? const SizedBox(height: 0)
-                        : Text(
+                        : const Text(
                             'Tell your Friend\nabout yourself',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500, height: 1.4),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                height: 1.4),
                             textAlign: TextAlign.center,
                           ),
                   ],
@@ -335,8 +349,10 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                               return ShaderMask(
                                 shaderCallback: (bounds) {
                                   if (text.split(' ').length < 10) {
-                                    return const LinearGradient(colors: [Colors.white, Colors.white])
-                                        .createShader(bounds);
+                                    return const LinearGradient(colors: [
+                                      Colors.white,
+                                      Colors.white
+                                    ]).createShader(bounds);
                                   }
                                   return const LinearGradient(
                                     colors: [Colors.transparent, Colors.white],
@@ -351,7 +367,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                                   child: ListView(
                                     controller: _scrollController,
                                     shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     children: [
                                       Text(
                                         text,
@@ -408,8 +425,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                                 () => Navigator.pop(context),
                                 () {
                                   Navigator.pop(context);
-                                  launchUrl(
-                                      Uri.parse('https://github.com/BasedHardware/Omi/releases/tag/v1.0.4-firmware'));
+                                  launchUrl(Uri.parse(
+                                      'https://github.com/BasedHardware/Omi/releases/tag/v1.0.4-firmware'));
                                 },
                                 'Firmware Update Required',
                                 'Please update your device firmware to set-up your speech profile.',
@@ -422,17 +439,22 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
 
                           initiateWebsocket();
                           // 1.5 minutes seems reasonable
-                          _forceCompletionTimer = Timer(Duration(seconds: maxDuration), finalize);
+                          _forceCompletionTimer =
+                              Timer(Duration(seconds: maxDuration), finalize);
                           setState(() => startedRecording = true);
                         },
                         color: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                        child: const Text('Get Started', style: TextStyle(color: Colors.black)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24)),
+                        child: const Text('Get Started',
+                            style: TextStyle(color: Colors.black)),
                       )
                     : profileCompleted
                         ? Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 0),
                             decoration: BoxDecoration(
                               border: const GradientBoxBorder(
                                 gradient: LinearGradient(colors: [
@@ -451,25 +473,31 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                               },
                               child: const Text(
                                 "All done!",
-                                style: TextStyle(color: Colors.white, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                           )
                         : uploadingProfile
                             ? const CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               )
                             : Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     message,
-                                    style: TextStyle(color: Colors.grey.shade300, fontSize: 14, height: 1.4),
+                                    style: TextStyle(
+                                        color: Colors.grey.shade300,
+                                        fontSize: 14,
+                                        height: 1.4),
                                     textAlign: TextAlign.center,
                                   ),
                                   const SizedBox(height: 24),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 32),
                                     child: Stack(
                                       children: [
                                         // LinearProgressIndicator(
@@ -478,15 +506,20 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                                         // ),
                                         LinearProgressIndicator(
                                           value: percentageCompleted,
-                                          backgroundColor: Colors.grey.shade300, // Make sure background is transparent
-                                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                                          backgroundColor: Colors.grey.shade300,
+                                          // Make sure background is transparent
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<
+                                                  Color>(Colors.deepPurple),
                                         ),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(height: 12),
-                                  Text('${(percentageCompleted * 100).toInt()}%',
-                                      style: const TextStyle(color: Colors.white)),
+                                  Text(
+                                      '${(percentageCompleted * 100).toInt()}%',
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ],
                               ),
               ),

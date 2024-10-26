@@ -9,9 +9,12 @@ triggerTranscriptSegmentReceivedEvents(
   Function(ServerMessage)? sendMessageToChat,
 }) async {
   webhookOnTranscriptReceivedCall(segments, sessionId).then((s) {
-    if (s.isNotEmpty)
-      NotificationService.instance
-          .createNotification(title: 'Developer: On Transcript Received', body: s, notificationId: 10);
+    if (s.isNotEmpty) {
+      NotificationService.instance.createNotification(
+          title: 'Developer: On Transcript Received',
+          body: s,
+          notificationId: 10);
+    }
   });
   // TODO: restore me, how to trigger from backend
 }

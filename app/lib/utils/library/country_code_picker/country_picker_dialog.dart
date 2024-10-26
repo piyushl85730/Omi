@@ -47,14 +47,14 @@ class CountryPickerDialog extends StatefulWidget {
   final PickerDialogStyle? style;
 
   const CountryPickerDialog({
-    Key? key,
+    super.key,
     required this.searchText,
     required this.countryList,
     required this.onCountryChanged,
     required this.selectedCountry,
     required this.filteredCountries,
     this.style,
-  }) : super(key: key);
+  });
 
   @override
   _CountryPickerDialogState createState() => _CountryPickerDialogState();

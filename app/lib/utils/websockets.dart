@@ -9,7 +9,13 @@ import 'package:friend_private/env/env.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:web_socket_channel/io.dart';
 
-enum WebsocketConnectionStatus { notConnected, connected, failed, closed, error }
+enum WebsocketConnectionStatus {
+  notConnected,
+  connected,
+  failed,
+  closed,
+  error
+}
 
 Future<IOWebSocketChannel?> _initWebsocketStream(
   void Function(List<TranscriptSegment>) onMessageReceived,
@@ -23,7 +29,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 ) async {
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-  var params = '?language=$recordingsLanguage&sample_rate=$sampleRate&codec=$codec&uid=${SharedPreferencesUtil().uid}&include_speech_profile=$includeSpeechProfile';
+  var params =
+      '?language=$recordingsLanguage&sample_rate=$sampleRate&codec=$codec&uid=${SharedPreferencesUtil().uid}&include_speech_profile=$includeSpeechProfile';
 
   IOWebSocketChannel channel = IOWebSocketChannel.connect(
     Uri.parse('${Env.apiBaseUrl!.replaceAll('https', 'wss')}listen$params'),
@@ -37,14 +44,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
         final segments = jsonDecode(event);
         if (segments is List) {
           if (segments.isEmpty) return;
-          onMessageReceived(segments.map((e) => TranscriptSegment.fromJson(e)).toList());
+          onMessageReceived(
+              segments.map((e) => TranscriptSegment.fromJson(e)).toList());
         } else {
           debugPrint(event.toString());
         }
       },
       onError: (err, stackTrace) {
         onWebsocketConnectionError(err); // error during connection
-        CrashReporting.reportHandledCrash(err!, stackTrace, level: NonFatalExceptionLevel.warning);
+        CrashReporting.reportHandledCrash(err!, stackTrace,
+            level: NonFatalExceptionLevel.warning);
       },
       onDone: (() {
         // debugPrint('Websocket connection onDone ${channel}'); // FIXME
@@ -54,8 +63,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
   }).onError((err, stackTrace) {
     // no closing reason or code
-    print(err);
-    CrashReporting.reportHandledCrash(err!, stackTrace, level: NonFatalExceptionLevel.warning);
+    debugPrint(err.toString());
+    CrashReporting.reportHandledCrash(err!, stackTrace,
+        level: NonFatalExceptionLevel.warning);
     onWebsocketConnectionFailed(err); // initial connection failed
   });
 
@@ -64,7 +74,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     debugPrint('Websocket Opened');
     onWebsocketConnectionSuccess();
   } catch (err) {
-    print(err);
+    debugPrint(err.toString());
   }
   return channel;
 }

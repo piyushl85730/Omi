@@ -163,7 +163,7 @@ Future cameraStartPhotoController(String deviceId) async {
   // Capture photo once every 10s
   await imageCaptureControlCharacteristic.write([0x0A]);
 
-  print('cameraStartPhotoController');
+  debugPrint('cameraStartPhotoController');
 }
 
 Future cameraStopPhotoController(String deviceId) async {
@@ -181,7 +181,7 @@ Future cameraStopPhotoController(String deviceId) async {
 
   await imageCaptureControlCharacteristic.write([0x00]);
 
-  print('cameraStopPhotoController');
+  debugPrint('cameraStopPhotoController');
 }
 
 Future<bool> hasPhotoStreamingCharacteristic(String deviceId) async {

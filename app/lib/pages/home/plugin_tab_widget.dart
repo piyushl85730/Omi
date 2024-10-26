@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:friend_private/firebase/model/plugin_model.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/firebase/model/user_memories_model.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/expandable_text.dart';
@@ -9,7 +9,7 @@ import 'package:share_plus/share_plus.dart';
 class PluginTabWidget extends StatefulWidget {
   final UserMemoriesModel userMemoriesModel;
   final PluginsResult pluginsResult;
-  final PluginModel pluginModel;
+  final Plugin plugin;
   final Function onTap;
   final bool isDividerShow;
   final bool isInstallButtonShow;
@@ -18,7 +18,7 @@ class PluginTabWidget extends StatefulWidget {
       {super.key,
       required this.userMemoriesModel,
       required this.pluginsResult,
-      required this.pluginModel,
+      required this.plugin,
       required this.onTap,
       required this.isDividerShow,
       required this.isInstallButtonShow});
@@ -52,7 +52,7 @@ class _PluginTabWidgetState extends State<PluginTabWidget> {
                         Container(
                           margin: const EdgeInsets.only(top: 5),
                           child: CachedNetworkImage(
-                            imageUrl: widget.pluginModel.image!,
+                            imageUrl: widget.plugin.getImageUrl(),
                             imageBuilder: (context, imageProvider) =>
                                 CircleAvatar(
                               backgroundColor: Colors.white,
@@ -85,7 +85,7 @@ class _PluginTabWidgetState extends State<PluginTabWidget> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            widget.pluginModel.name ?? "",
+                                            widget.plugin.name,
                                             maxLines: 1,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w600,
@@ -93,8 +93,7 @@ class _PluginTabWidgetState extends State<PluginTabWidget> {
                                                 fontSize: 16),
                                           ),
                                           Text(
-                                            widget.pluginModel.description ??
-                                                "",
+                                            widget.plugin.description,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(

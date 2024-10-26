@@ -45,7 +45,7 @@ class _ForegroundFirstTaskHandler extends TaskHandler {
 
   @override
   void onRepeatEvent(DateTime timestamp) async {
-    print("Foreground repeat event triggered");
+    debugPrint("Foreground repeat event triggered");
     await locationInBackground();
   }
 

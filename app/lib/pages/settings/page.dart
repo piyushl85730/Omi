@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
-import 'package:friend_private/pages/settings/developer.dart';
 import 'package:friend_private/pages/settings/privacy.dart';
 import 'package:friend_private/pages/settings/webview.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
@@ -187,11 +186,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   getItemAddOn('Calendar Integration', () {
                     routeToPage(context, const CalendarPage());
                   }, icon: Icons.calendar_month),
-                  getItemAddOn('-Developer Mode', () async {
+                  /*getItemAddOn('-Developer Mode', () async {
                     MixpanelManager().devModePageOpened();
                     await routeToPage(context, const DeveloperSettingsPage());
                     setState(() {});
-                  }, icon: Icons.code, visibility: devModeEnabled),
+                  }, icon: Icons.code, visibility: devModeEnabled),*/
                   const SizedBox(height: 32.0),
                   const Align(
                     alignment: Alignment.centerLeft,

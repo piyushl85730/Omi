@@ -8,7 +8,8 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/memory.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 
-Future<String> webhookOnMemoryCreatedCall(ServerMemory? memory, {bool returnRawBody = false}) async {
+Future<String> webhookOnMemoryCreatedCall(ServerMemory? memory,
+    {bool returnRawBody = false}) async {
   if (memory == null) return '';
   debugPrint('devModeWebhookCall: $memory');
   String url = SharedPreferencesUtil().webhookOnMemoryCreated;
@@ -29,30 +30,38 @@ Future<String> webhookOnMemoryCreatedCall(ServerMemory? memory, {bool returnRawB
       method: 'POST',
     );
     debugPrint('response: ${response?.statusCode}');
-    if (returnRawBody) return jsonEncode({'statusCode': response?.statusCode, 'body': response?.body});
+    if (returnRawBody) {
+      return jsonEncode(
+          {'statusCode': response?.statusCode, 'body': response?.body});
+    }
 
     var body = jsonDecode(response?.body ?? '{}');
-    print(body);
+    debugPrint(body);
     return body['message'] ?? '';
   } catch (e) {
     debugPrint('Error triggering memory request at endpoint: $e');
     // TODO: is it bad for reporting?  I imagine most of the time is backend error, so nah.
-    CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.info, userAttributes: {
-      'url': url,
-    });
+    CrashReporting.reportHandledCrash(e, StackTrace.current,
+        level: NonFatalExceptionLevel.info,
+        userAttributes: {
+          'url': url,
+        });
     return '';
   }
 }
 
-Future<String> webhookOnTranscriptReceivedCall(List<TranscriptSegment> segments, String sessionId) async {
+Future<String> webhookOnTranscriptReceivedCall(
+    List<TranscriptSegment> segments, String sessionId) async {
   // was called twice?
-  if (segments.isEmpty || SharedPreferencesUtil().webhookOnTranscriptReceived.isEmpty) return '';
+  if (segments.isEmpty ||
+      SharedPreferencesUtil().webhookOnTranscriptReceived.isEmpty) return '';
   debugPrint('webhookOnTranscriptReceivedCall: $segments');
-  return triggerTranscriptSegmentsRequest(SharedPreferencesUtil().webhookOnTranscriptReceived, sessionId, segments);
+  return triggerTranscriptSegmentsRequest(
+      SharedPreferencesUtil().webhookOnTranscriptReceived, sessionId, segments);
 }
 
-
-Future<String> triggerTranscriptSegmentsRequest(String url, String sessionId, List<TranscriptSegment> segments) async {
+Future<String> triggerTranscriptSegmentsRequest(
+    String url, String sessionId, List<TranscriptSegment> segments) async {
   debugPrint('triggerMemoryRequestAtEndpoint: $url');
   if (url.isEmpty) return '';
   if (url.contains('?')) {
@@ -72,14 +81,13 @@ Future<String> triggerTranscriptSegmentsRequest(String url, String sessionId, Li
     );
     debugPrint('response: ${response?.statusCode}');
     var body = jsonDecode(response?.body ?? '{}');
-    print(body);
+    debugPrint(body);
     return body['message'] ?? '';
   } catch (e) {
     debugPrint('Error triggering transcript request at endpoint: $e');
     // TODO: is it bad for reporting?  I imagine most of the time is backend error, so nah.
-    CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.info, userAttributes: {
-      'url': url,
-    });
+    CrashReporting.reportHandledCrash(e, StackTrace.current,
+        level: NonFatalExceptionLevel.info, userAttributes: {'url': url});
     return '';
   }
 }
@@ -90,7 +98,7 @@ Future<String?> wavToBase64(String filePath) async {
     // Read file as bytes
     File file = File(filePath);
     if (!file.existsSync()) {
-      // print('File does not exist: $filePath');
+      // debugPrint('File does not exist: $filePath');
       return null;
     }
     List<int> fileBytes = await file.readAsBytes();
@@ -100,7 +108,7 @@ Future<String?> wavToBase64(String filePath) async {
 
     return base64Encoded;
   } catch (e) {
-    // print('Error converting WAV to base64: $e');
+    // debugPrint('Error converting WAV to base64: $e');
     return null; // Handle error gracefully in your application
   }
 }

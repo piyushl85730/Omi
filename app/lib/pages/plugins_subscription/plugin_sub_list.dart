@@ -249,7 +249,7 @@ class _PluginSubscriptionListState extends State<PluginSubscriptionList> {
           scaffoldMessage("The purchase is invalid");
           break;
         default:
-          print("Unknown error occurred: ${e.message}");
+          debugPrint("Unknown error occurred: ${e.message}");
           scaffoldMessage("An unexpected error occurred. Please try again.");
           break;
       }
@@ -264,9 +264,9 @@ class _PluginSubscriptionListState extends State<PluginSubscriptionList> {
     return;*/
     try {
       CustomerInfo restoredInfo = await Purchases.restorePurchases();
-      print('*** restoredInfo ***');
-      print(restoredInfo);
-      print(restoredInfo.entitlements);
+      debugPrint('*** restoredInfo ***');
+      debugPrint(restoredInfo.toString());
+      debugPrint(restoredInfo.entitlements.toString());
     } on PlatformException catch (e) {
       // Handle errors specific to RevenueCat using PurchasesErrorHelper
       var errorCode = PurchasesErrorHelper.getErrorCode(e);
@@ -286,13 +286,13 @@ class _PluginSubscriptionListState extends State<PluginSubscriptionList> {
           break;
         case PurchasesErrorCode.unknownError:
         default:
-          print("An unknown error occurred during restore: ${e.message}");
+          debugPrint("An unknown error occurred during restore: ${e.message}");
           scaffoldMessage("An unexpected error occurred. Please try again.");
           break;
       }
     } catch (e) {
       // Handle any other unexpected errors
-      print("An unexpected error occurred: $e");
+      debugPrint("An unexpected error occurred: $e");
       scaffoldMessage("An unexpected error occurred. Please try again.");
     }
   }

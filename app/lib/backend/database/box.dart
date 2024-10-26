@@ -1,4 +1,3 @@
-import 'package:objectbox/objectbox.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../../objectbox.g.dart';
@@ -15,7 +14,8 @@ class ObjectBox {
   static Future<ObjectBox> create() async {
     final docsDir = await getApplicationDocumentsDirectory();
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart
-    final store = await openStore(directory: p.join(docsDir.path, "obx-example"));
+    final store =
+        await openStore(directory: p.join(docsDir.path, "obx-example"));
     return ObjectBox._create(store);
   }
 }

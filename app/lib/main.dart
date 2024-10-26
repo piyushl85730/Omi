@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
@@ -56,7 +55,9 @@ Future<bool> _init() async {
   bool isAuth = false;
   try {
     isAuth = (await getIdToken()) != null;
-  } catch (e) {} // if no connect this will fail
+  } catch (e) {
+    debugPrint(e.toString());
+  } // if no connect this will fail
 
   if (isAuth) MixpanelManager().identify();
 

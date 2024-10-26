@@ -220,7 +220,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     String decodedRawText = widget.memory.externalIntegration?.text ?? '';
     try {
       decodedRawText = utf8.decode(decodedRawText.codeUnits);
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
 
     return [
       SizedBox(height: widget.memory.transcriptSegments.isEmpty ? 16 : 0),
@@ -249,7 +251,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
   List<Widget> _getImagesWidget() {
     var photosData =
         photos.map((e) => Tuple2(e.base64, e.description)).toList();
-    print('Images length ${photos.length}');
+    debugPrint('Images length ${photos.length}');
     return [
       PhotosGridComponent(photos: photosData),
       const SizedBox(height: 32)

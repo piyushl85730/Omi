@@ -299,7 +299,7 @@ getPreferencesWidgets({
     //     ),
     //   ),
     // ),
-    Padding(
+    /*Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
       child: InkWell(
         onTap: onDevModeClicked,
@@ -337,7 +337,7 @@ getPreferencesWidgets({
           ),
         ),
       ),
-    ),
+    ),*/
   ];
 }
 

@@ -19,9 +19,7 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/memory.dart';
 import 'package:friend_private/backend/schema/message.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
-import 'package:friend_private/firebase/model/plugin_model.dart';
 import 'package:friend_private/firebase/model/user_memories_model.dart';
-import 'package:friend_private/firebase/service/plugin_fire.dart';
 import 'package:friend_private/firebase/service/user_memories_fire.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
@@ -42,6 +40,7 @@ import 'package:friend_private/utils/ble/scan.dart';
 import 'package:friend_private/utils/connectivity_controller.dart';
 import 'package:friend_private/utils/memories/process.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/purchase/store_config.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
@@ -49,8 +48,6 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:tuple/tuple.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../utils/purchase/store_config.dart';
 
 class HomePageWrapper extends StatefulWidget {
   const HomePageWrapper({super.key});
@@ -84,7 +81,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   //List<Product> subProducts = [];
 
   List<UserMemoriesModel>? userMemoriesModels = [];
-  List<PluginModel>? pluginsModels = [];
 
   final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
   bool loadingNewMemories = true;
@@ -159,15 +155,20 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     setState(() {});
   }
 
-  _initiateMemories() async {
+  Future<void> _initiateMemories() async {
+    setState(() {
+      loadingNewMemories = true;
+    });
     memories = await getMemories();
     if (memories.isEmpty) {
       memories = SharedPreferencesUtil().cachedMemories;
     } else {
       SharedPreferencesUtil().cachedMemories = memories;
     }
-    loadingNewMemories = false;
-    setState(() {});
+
+    setState(() {
+      loadingNewMemories = false;
+    });
     _retryFailedMemories();
   }
 
@@ -210,7 +211,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       isPluginLoading = true;
     });
 
-    plugins = SharedPreferencesUtil().pluginsList;
     plugins = await retrievePlugins();
 
     userMemoriesModels = await UserMemoriesService().getUserMemoriesList();
@@ -218,8 +218,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       userMemoriesModels!.removeWhere((t) => t.deleted == true);
     }
     debugPrint("initiatePlugins 0 -> ${userMemoriesModels?.length ?? 0}");
-    pluginsModels = await PluginService().getPluginsList();
-    debugPrint("initiatePlugins 0 -> ${pluginsModels?.length ?? 0}");
 
     _edgeCasePluginNotAvailable();
 
@@ -578,37 +576,63 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                   controller: _controller,
                                   physics: const NeverScrollableScrollPhysics(),
                                   children: [
-                                    MemoriesPage(
-                                      memories: memories,
-                                      updateMemory:
-                                          (ServerMemory memory, int index) {
-                                        var memoriesCopy =
-                                            List<ServerMemory>.from(memories);
-                                        memoriesCopy[index] = memory;
-                                        setState(() => memories = memoriesCopy);
-                                      },
-                                      deleteMemory:
-                                          (ServerMemory memory, int index) {
-                                        var memoriesCopy =
-                                            List<ServerMemory>.from(memories);
-                                        memoriesCopy.removeAt(index);
-                                        setState(() => memories = memoriesCopy);
-                                      },
-                                      loadMoreMemories: () async {
-                                        if (memories.length % 50 != 0) return;
-                                        if (loadingNewMemories) return;
-                                        setState(
-                                            () => loadingNewMemories = true);
-                                        var newMemories = await getMemories(
-                                            offset: memories.length);
-                                        memories.addAll(newMemories);
-                                        loadingNewMemories = false;
-                                        setState(() {});
-                                      },
-                                      loadingNewMemories: loadingNewMemories,
-                                      textFieldFocusNode:
-                                          memoriesTextFieldFocusNode,
-                                    ),
+                                    RefreshIndicator(
+                                        color: Colors.white,
+                                        backgroundColor: Colors.deepPurple,
+                                        onRefresh: _initiateMemories,
+                                        child: (!loadingNewMemories)
+                                            ? MemoriesPage(
+                                                memories: memories,
+                                                updateMemory:
+                                                    (ServerMemory memory,
+                                                        int index) {
+                                                  var memoriesCopy =
+                                                      List<ServerMemory>.from(
+                                                          memories);
+                                                  memoriesCopy[index] = memory;
+                                                  setState(() =>
+                                                      memories = memoriesCopy);
+                                                },
+                                                deleteMemory:
+                                                    (ServerMemory memory,
+                                                        int index) {
+                                                  var memoriesCopy =
+                                                      List<ServerMemory>.from(
+                                                          memories);
+                                                  memoriesCopy.removeAt(index);
+                                                  setState(() =>
+                                                      memories = memoriesCopy);
+                                                },
+                                                loadMoreMemories: () async {
+                                                  if (memories.length % 50 !=
+                                                      0) {
+                                                    return;
+                                                  }
+                                                  if (loadingNewMemories) {
+                                                    return;
+                                                  }
+                                                  setState(() {
+                                                    loadingNewMemories = true;
+                                                  });
+
+                                                  var newMemories =
+                                                      await getMemories(
+                                                          offset:
+                                                              memories.length);
+                                                  memories.addAll(newMemories);
+
+                                                  setState(() {
+                                                    loadingNewMemories = false;
+                                                  });
+                                                },
+                                                loadingNewMemories:
+                                                    loadingNewMemories,
+                                                textFieldFocusNode:
+                                                    memoriesTextFieldFocusNode,
+                                              )
+                                            : const Center(
+                                                child:
+                                                    CupertinoActivityIndicator())),
                                     (userMemoriesModels == null ||
                                             userMemoriesModels!.isEmpty ||
                                             userMemoriesModels!
@@ -650,8 +674,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                                 ? PluginsTabPage(
                                                     userMemoriesModels:
                                                         userMemoriesModels!,
-                                                    pluginsModels:
-                                                        pluginsModels ?? [])
+                                                    plugins: plugins)
                                                 : const Center(
                                                     child:
                                                         CupertinoActivityIndicator())),

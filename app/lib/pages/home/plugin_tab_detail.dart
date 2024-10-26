@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/http/api/plugins.dart';
-import 'package:friend_private/firebase/model/plugin_model.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/firebase/model/user_memories_model.dart';
 import 'package:friend_private/pages/home/plugin_detail_post.dart';
 import 'package:friend_private/pages/home/plugin_detail_profile.dart';
@@ -9,16 +9,16 @@ import 'package:friend_private/pages/home/subscription.dart';
 
 class PluginTabDetailPage extends StatefulWidget {
   final UserMemoriesModel userMemoriesModel;
-  final PluginModel pluginModel;
+  final Plugin plugin;
   final List<UserMemoriesModel> userMemoriesModels;
-  final List<PluginModel> pluginsModels;
+  final List<Plugin> plugins;
 
   const PluginTabDetailPage(
       {super.key,
       required this.userMemoriesModel,
-      required this.pluginModel,
+      required this.plugin,
       required this.userMemoriesModels,
-      required this.pluginsModels});
+      required this.plugins});
 
   @override
   State<PluginTabDetailPage> createState() => _PluginTabDetailPageState();
@@ -29,8 +29,7 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
   bool setupCompleted = false;
 
   checkSetupCompleted() {
-    isPluginSetupCompleted(
-            widget.pluginModel.externalIntegration!.setupCompletedUrl)
+    isPluginSetupCompleted(widget.plugin.externalIntegration!.setupCompletedUrl)
         .then((value) {
       setState(() => setupCompleted = value);
     });
@@ -38,13 +37,13 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
 
   @override
   void initState() {
-    if (widget.pluginModel.worksExternally()) {
-      getPluginMarkdown(widget
-              .pluginModel.externalIntegration!.setupInstructionsFilePath!)
+    if (widget.plugin.worksExternally()) {
+      getPluginMarkdown(
+              widget.plugin.externalIntegration!.setupInstructionsFilePath)
           .then((value) {
         value = value.replaceAll(
           '](assets/',
-          '](https://raw.githubusercontent.com/maxwell882000/shopify-components/main/plugins/instructions/${widget.pluginModel.id}/assets/',
+          '](https://raw.githubusercontent.com/maxwell882000/shopify-components/main/plugins/instructions/${widget.plugin.id}/assets/',
         );
         setState(() => instructionsMarkdown = value);
       });
@@ -58,7 +57,7 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.pluginModel.name ?? ""),
+          title: Text(widget.plugin.name),
           backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0,
         ),
@@ -70,7 +69,7 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
                 backgroundColor: Colors.white,
                 maxRadius: 28,
                 child: CachedNetworkImage(
-                  imageUrl: widget.pluginModel.image ?? "",
+                  imageUrl: widget.plugin.getImageUrl(),
                   imageBuilder: (context, imageProvider) => CircleAvatar(
                     backgroundColor: Colors.white,
                     maxRadius: 28,
@@ -89,7 +88,7 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      widget.pluginModel.description ?? "",
+                      widget.plugin.description,
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                   ),
@@ -123,7 +122,8 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
                       : Container(),*/
                 ],
               ),
-              trailing: GestureDetector(
+              trailing: const SizedBox.shrink(),
+              /*GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (c) => const SubscriptionPage()));
@@ -144,7 +144,7 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
                         fontWeight: FontWeight.w500),
                   ),
                 ),
-              ),
+              ),*/
               /*IconButton(
                 icon: const Icon(Icons.check, color: Colors.white),
                 onPressed: () {
@@ -176,12 +176,12 @@ class _PluginTabDetailPageState extends State<PluginTabDetailPage> {
                       child: TabBarView(
                         children: [
                           PluginDetailPostPage(
-                              pluginModel: widget.pluginModel,
+                              plugin: widget.plugin,
                               userMemoriesModels: widget.userMemoriesModels,
-                              pluginsModels: widget.pluginsModels),
+                              plugins: widget.plugins),
                           PluginDetailProfilePage(
                               userMemoriesModel: widget.userMemoriesModel,
-                              pluginModel: widget.pluginModel)
+                              plugin: widget.plugin)
                         ],
                       ),
                     ),
