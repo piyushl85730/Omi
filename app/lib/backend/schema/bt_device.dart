@@ -75,7 +75,7 @@ class DeviceInfo {
     var modelNumber = 'Friend';
     var firmwareRevision = '1.0.2';
     var hardwareRevision = 'Seeed Xiao BLE Sense';
-    var manufacturerName = 'Based Hardware';
+    var manufacturerName = '';
 
     if (device == null) return DeviceInfo(modelNumber, firmwareRevision, hardwareRevision, manufacturerName);
 

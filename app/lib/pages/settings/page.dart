@@ -102,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     MixpanelManager()
                         .recordingLanguageChanged(_selectedLanguage);
                   }, _selectedLanguage),
-                  ...getPreferencesWidgets(
+                  /*...getPreferencesWidgets(
                     onOptInAnalytics: () {
                       setState(() {
                         optInAnalytics =
@@ -135,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       });
                     },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 16),*/
                   ListTile(
                     title: const Text('Need help?',
                         style: TextStyle(color: Colors.white)),
@@ -148,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       MixpanelManager().supportContacted();
                     },
                   ),
-                  ListTile(
+                  /*ListTile(
                     contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                     title: const Text('Join the community!',
                         style: TextStyle(color: Colors.white)),
@@ -159,8 +159,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       launchUrl(Uri.parse('https://discord.gg/ZutWMTJnwA'));
                       MixpanelManager().joinDiscordClicked();
                     },
-                  ),
-                  const SizedBox(height: 32.0),
+                  ),*/
+                  const SizedBox(height: 25.0),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -216,7 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       MaterialPageRoute(
                         builder: (c) => const PageWebView(
                           url: 'https://agiens.com/',
-                          title: 'Based Hardware',
+                          title: '',
                         ),
                       ),
                     );

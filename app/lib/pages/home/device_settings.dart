@@ -171,7 +171,7 @@ List<Widget> deviceSettingsWidgets(
     ),
     ListTile(
       title: const Text('Manufacturer Name'),
-      subtitle: Text(deviceInfo?.manufacturerName ?? 'Based Hardware'),
+      subtitle: Text(deviceInfo?.manufacturerName ?? ''),
     ),
   ];
 }
