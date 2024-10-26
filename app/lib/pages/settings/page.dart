@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/privacy.dart';
@@ -12,9 +14,6 @@ import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../backend/auth.dart';
-import '../onboarding/wrapper.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

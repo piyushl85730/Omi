@@ -1,6 +1,6 @@
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import '../../objectbox.g.dart';
+import 'package:friend_private/objectbox.g.dart';
 
 class ObjectBox {
   /// The Store of this app.

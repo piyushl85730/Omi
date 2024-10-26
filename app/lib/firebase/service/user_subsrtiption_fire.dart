@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../backend/preferences.dart';
-import '../model/user_subscription_model.dart';
+import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/firebase/model/user_subscription_model.dart';
 
 class UserSubscriptionFire {
   UserSubscriptionFire() {

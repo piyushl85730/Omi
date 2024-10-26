@@ -163,36 +163,8 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
                               ? Colors.white
                               : Colors.grey,
                         ),
-                        onPressed: () {
-                          if (!ConnectivityController().isConnected.value) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text(
-                                  "Can't enable plugin without internet connection."),
-                            ));
-                            return;
-                          }
-                          if (widget.plugin.worksExternally() &&
-                              !widget.plugin.enabled) {
-                            showDialog(
-                              context: context,
-                              builder: (c) => getDialog(
-                                context,
-                                () => Navigator.pop(context),
-                                () {
-                                  Navigator.pop(context);
-                                  _togglePlugin(widget.plugin.id.toString(),
-                                      !widget.plugin.enabled);
-                                },
-                                'Authorize External Plugin',
-                                'Do you allow this plugin to access your memories, transcripts, and recordings? Your data will be sent to the plugin\'s server for processing.',
-                                okButtonText: 'Confirm',
-                              ),
-                            );
-                          } else {
-                            _togglePlugin(widget.plugin.id.toString(),
-                                !widget.plugin.enabled);
-                          }
+                        onPressed: () async {
+                          await _togglePluginFunction();
                         },
                       )),
             ),
@@ -450,6 +422,34 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
         ));
   }
 
+  Future<void> _togglePluginFunction() async {
+    if (!ConnectivityController().isConnected.value) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Can't enable plugin without internet connection."),
+      ));
+      return;
+    }
+    if (widget.plugin.worksExternally() && !widget.plugin.enabled) {
+      await showDialog(
+        context: context,
+        builder: (c) => getDialog(
+          context,
+          () => Navigator.pop(context),
+          () async {
+            Navigator.pop(context);
+            await _togglePlugin(
+                widget.plugin.id.toString(), !widget.plugin.enabled);
+          },
+          'Authorize External Plugin',
+          'Do you allow this plugin to access your memories, transcripts, and recordings? Your data will be sent to the plugin\'s server for processing.',
+          okButtonText: 'Confirm',
+        ),
+      );
+    } else {
+      await _togglePlugin(widget.plugin.id.toString(), !widget.plugin.enabled);
+    }
+  }
+
   Future<void> _togglePlugin(String pluginId, bool isEnabled) async {
     var prefs = SharedPreferencesUtil();
     setState(() => pluginLoading = true);
@@ -537,6 +537,10 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
         widget.userSubscriptionFire.userSubscriptionList
             .addAll(await widget.userSubscriptionFire.getUserSubscription());
         Navigator.of(context).pop();
+        if (!widget.plugin.enabled) {
+          await _togglePluginFunction();
+        }
+        isPremiumUser = true;
         setState(() {});
       } else {
         Navigator.of(context).pop();
@@ -549,26 +553,28 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
 
   Widget manageScheduleCallWidget() {
     if (widget.plugin.name != "Eva English Teacher" || isPremiumUser != false) {
-      if (widget.plugin.worksWithCalls()) {
-        return UnconstrainedBox(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0))),
-            onPressed: () async {
-              await routeToPage(
-                  context, ScheduleCallSelectDayOfWeek(plugin: widget.plugin));
-            },
-            child: const Text(
-              'Schedule call',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
+      if (widget.plugin.enabled) {
+        if (widget.plugin.worksWithCalls()) {
+          return UnconstrainedBox(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0))),
+              onPressed: () async {
+                await routeToPage(context,
+                    ScheduleCallSelectDayOfWeek(plugin: widget.plugin));
+              },
+              child: const Text(
+                'Schedule call',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
 

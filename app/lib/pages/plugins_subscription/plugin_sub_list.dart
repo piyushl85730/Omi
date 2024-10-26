@@ -5,12 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friend_private/backend/http/shared.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/plugins_subscription/subscription_handler.dart';
 import 'package:friend_private/utils/purchase/store_config.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-
-import '../../backend/preferences.dart';
 
 class PluginSubscriptionList extends StatefulWidget {
   const PluginSubscriptionList({super.key});
