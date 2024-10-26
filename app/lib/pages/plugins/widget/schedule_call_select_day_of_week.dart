@@ -102,8 +102,15 @@ class _ScheduleCallSelectDayOfWeekState
                             children: [
                               Container(
                                   padding: const EdgeInsets.all(10),
-                                  child: const Icon(
-                                      Icons.check_box_outline_blank)),
+                                  child: Icon(
+                                      (weekday[index].callTimeModels.isNotEmpty)
+                                          ? Icons.check_box_rounded
+                                          : Icons.check_box_outline_blank,
+                                      color: (weekday[index]
+                                              .callTimeModels
+                                              .isNotEmpty)
+                                          ? Colors.blueAccent
+                                          : Colors.grey)),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +129,7 @@ class _ScheduleCallSelectDayOfWeekState
                                         weekday[index].callTimeModels.length,
                                         (ind) => Container(
                                           decoration: BoxDecoration(
-                                              color: Colors.green,
+                                              color: Colors.blueAccent,
                                               borderRadius:
                                                   BorderRadius.circular(30)),
                                           padding: const EdgeInsets.symmetric(
@@ -149,6 +156,24 @@ class _ScheduleCallSelectDayOfWeekState
                       return const SizedBox(height: 10);
                     },
                     itemCount: weekday.length,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    for (int i = 0; i < weekday.length; i++) {
+                      weekday[i].callTimeModels.clear();
+                    }
+                    setState(() {});
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    child: const Text(
+                      "Clear all",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline, height: 2),
+                    ),
                   ),
                 ),
                 Padding(
