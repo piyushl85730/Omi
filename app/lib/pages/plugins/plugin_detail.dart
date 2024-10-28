@@ -310,7 +310,7 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
-                        if (widget.plugin.worksWithMemories())
+                        if (widget.plugin.worksWithChat())
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
