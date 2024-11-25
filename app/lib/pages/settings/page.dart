@@ -255,7 +255,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     );
                   }, icon: Icons.logout_outlined, visibility: true),
                   const SizedBox(height: 32),
-                  Padding(
+                  /*Padding(
                     padding: const EdgeInsets.all(8),
                     child: GestureDetector(
                       onTap: () {
@@ -274,7 +274,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
+                  ),*/
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Align(
