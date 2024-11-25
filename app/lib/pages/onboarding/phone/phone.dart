@@ -213,9 +213,11 @@ class _PhonePageState extends State<PhonePage>
     if (response!.statusCode == 200) {
       return true;
     }
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Something went wrong please try again!'),
-      duration: Duration(seconds: 1),
+    String? message = jsonDecode(response.body)['message'];
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message ?? 'Something went wrong please try again!'),
+      duration: const Duration(seconds: 1),
     ));
     return false;
   }
