@@ -27,9 +27,13 @@ final List<Map<String, dynamic>> timezoneList = [
 ];
 
 class TimezoneDropdown extends StatefulWidget {
-  const TimezoneDropdown({super.key, required this.onSelectedTimezone});
+  const TimezoneDropdown(
+      {super.key,
+      required this.onSelectedTimezone,
+      required this.selectedTimezone});
 
   final Function(int) onSelectedTimezone;
+  final int? selectedTimezone;
 
   @override
   State<TimezoneDropdown> createState() => _TimezoneDropdownState();
@@ -40,6 +44,8 @@ class _TimezoneDropdownState extends State<TimezoneDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    selectedTimezone = widget.selectedTimezone;
+    debugPrint("TimezoneDropdown -> $selectedTimezone");
     return Container(
       height: 50,
       padding: const EdgeInsets.all(10),

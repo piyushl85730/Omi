@@ -178,6 +178,7 @@ class _ScheduleCallSelectDayOfWeekState
                             const Text("I want to Learn"),
                             const SizedBox(height: 10),
                             LanguageDropdown(
+                              selectedLanguage: selectedLearnLanguage,
                               onSelectedLanguage: (value) {
                                 selectedLearnLanguage = value;
                                 setState(() {});
@@ -194,6 +195,7 @@ class _ScheduleCallSelectDayOfWeekState
                             const Text("Enter timezone"),
                             const SizedBox(height: 10),
                             TimezoneDropdown(
+                              selectedTimezone: selectedTimeZone,
                               onSelectedTimezone: (value) {
                                 selectedTimeZone = value;
                                 setState(() {});
@@ -348,7 +350,7 @@ class _ScheduleCallSelectDayOfWeekState
 
   Future<void> getScheduleCallsApi() async {
     changeLoadingState();
-    Clipboard.setData(ClipboardData(text: await getAuthHeader()));
+    //Clipboard.setData(ClipboardData(text: await getAuthHeader()));
 
     var mainHeaders = {
       "accept": "application/json",
@@ -382,6 +384,9 @@ class _ScheduleCallSelectDayOfWeekState
               }
             }
           }
+          selectedLearnLanguage = scheduleUserModels[i].learnLanguage;
+          selectedTimeZone = scheduleUserModels[i].timezone;
+          setState(() {});
         }
       }
     }

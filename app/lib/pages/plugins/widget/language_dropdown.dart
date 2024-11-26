@@ -45,9 +45,13 @@ final List<Map<String, String>> languagesList = [
 ];
 
 class LanguageDropdown extends StatefulWidget {
-  const LanguageDropdown({super.key, required this.onSelectedLanguage});
+  const LanguageDropdown(
+      {super.key,
+      required this.onSelectedLanguage,
+      required this.selectedLanguage});
 
   final Function(String) onSelectedLanguage;
+  final String? selectedLanguage;
 
   @override
   State<LanguageDropdown> createState() => _LanguageDropdownState();
@@ -58,6 +62,8 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    selectedLanguage = widget.selectedLanguage;
+    debugPrint("LanguageDropdown -> $selectedLanguage");
     return Container(
       height: 50,
       padding: const EdgeInsets.all(10),
