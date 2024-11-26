@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:friend_private/backend/http/shared.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/pages/plugins/widget/language_dropdown.dart';
 import 'package:friend_private/pages/plugins/widget/model/schedule_call.dart';
 import 'package:friend_private/pages/plugins/widget/model/schedule_user.dart';
 import 'package:friend_private/pages/plugins/widget/select_times_for_day_widget.dart';
+
+import 'timezone_dropdown.dart';
 
 class ScheduleCallSelectDayOfWeek extends StatefulWidget {
   final Plugin plugin;
@@ -26,6 +30,10 @@ class _ScheduleCallSelectDayOfWeekState
   bool loading1 = false;
 
   changeLoadingState1() => setState(() => loading1 = !loading1);
+
+  String? selectedLearnLanguage;
+
+  int? selectedTimeZone;
 
   @override
   void initState() {
@@ -158,6 +166,45 @@ class _ScheduleCallSelectDayOfWeekState
                     itemCount: weekday.length,
                   ),
                 ),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("I want to Learn"),
+                            const SizedBox(height: 10),
+                            LanguageDropdown(
+                              onSelectedLanguage: (value) {
+                                selectedLearnLanguage = value;
+                                setState(() {});
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Enter timezone"),
+                            const SizedBox(height: 10),
+                            TimezoneDropdown(
+                              onSelectedTimezone: (value) {
+                                selectedTimeZone = value;
+                                setState(() {});
+                              },
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 GestureDetector(
                   onTap: () {
                     for (int i = 0; i < weekday.length; i++) {
@@ -183,6 +230,22 @@ class _ScheduleCallSelectDayOfWeekState
                     onPressed: loading || loading1
                         ? () {}
                         : () async {
+                            if (selectedLearnLanguage == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Please select Learn Language!'),
+                                duration: Duration(seconds: 1),
+                              ));
+                              return;
+                            }
+                            if (selectedTimeZone == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Please select TimeZone!'),
+                                duration: Duration(seconds: 1),
+                              ));
+                              return;
+                            }
                             bool isSuccessful =
                                 await setScheduleCallsApi(context);
                             if (isSuccessful) {
@@ -255,7 +318,9 @@ class _ScheduleCallSelectDayOfWeekState
 
     Map<String, dynamic> passDate = {
       "pluginId": widget.plugin.id,
-      "timeSlots": timeSlotsModelToJson(timeSlotsModels)
+      "timeSlots": timeSlotsModelToJson(timeSlotsModels),
+      "learnLanguage": selectedLearnLanguage ?? "",
+      "timeZone": selectedTimeZone ?? 0
     };
 
     var response = await makeApiCall(
@@ -266,8 +331,10 @@ class _ScheduleCallSelectDayOfWeekState
       body: json.encode(passDate),
     );
 
-    debugPrint("verifyOTPApi response :- ${response?.body}");
-    debugPrint("verifyOTPApi response :- ${response?.statusCode}");
+    debugPrint("setScheduleCallsApi header :- $mainHeaders");
+    debugPrint("setScheduleCallsApi response :- ${response?.body}");
+    debugPrint("setScheduleCallsApi response :- ${response?.statusCode}");
+
     changeLoadingState1();
     if (response!.statusCode == 200 || response.statusCode == 201) {
       return true;
@@ -281,6 +348,8 @@ class _ScheduleCallSelectDayOfWeekState
 
   Future<void> getScheduleCallsApi() async {
     changeLoadingState();
+    Clipboard.setData(ClipboardData(text: await getAuthHeader()));
+
     var mainHeaders = {
       "accept": "application/json",
       "Authorization": await getAuthHeader()
@@ -292,8 +361,10 @@ class _ScheduleCallSelectDayOfWeekState
         headers: mainHeaders,
         body: "");
 
+    debugPrint("getScheduleCallsApi header :- $mainHeaders");
     debugPrint("getScheduleCallsApi response :- ${response?.body}");
     debugPrint("getScheduleCallsApi response :- ${response?.statusCode}");
+
     if (response!.statusCode == 200) {
       List<ScheduleUserModel> scheduleUserModels =
           scheduleUserModelFromJson(response.body);

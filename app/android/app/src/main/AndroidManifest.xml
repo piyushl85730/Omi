@@ -24,8 +24,7 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- legacy for Android 9 or lower -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -53,10 +52,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
-   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
 
-   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-   <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.FOREGROUND_BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.FOREGROUND_CHANGE_NETWORK_STATE" />
@@ -66,10 +65,10 @@
 
     <!-- Add android:stopWithTask option only when necessary. -->
     <application
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true"
         tools:replace="android:label">
         <service
@@ -77,7 +76,7 @@
             android:exported="false"
             android:foregroundServiceType="dataSync|connectedDevice"
             android:stopWithTask="true" />
-         <service
+        <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
             android:foregroundServiceType="microphone"
             tools:node="merge" />
@@ -85,7 +84,7 @@
         <service
             android:name=".NotificationOnKillService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
